@@ -1,12 +1,22 @@
-========================
- Replay Attack Database
-========================
+===================================
+ CASIA Face Anti-Spoofing Database
+===================================
 
-This package contains the access API and descriptions for the `Replay Attack
-Database <http://www.idiap.ch/dataset/replayattack/>`_. The actual raw data for
-the database should be downloaded from the original URL. This package only
-contains the `Bob <http://www.idiap.ch/software/bob/>`_ accessor methods to use
-the DB directly from python, with our certified protocols.
+The CASIA-FASD database is a spoofing attack database which consists of three
+types of attacks: warped printed photographs, printed photographs with cut eyes
+and video attacks. The samples are taken with three types of cameras: low
+quality, normal quality and high quality.
+
+The actual raw data for the database should be downloaded from the original
+URL. This package only contains the `Bob <http://www.idiap.ch/software/bob/>`_
+accessor methods to use the DB directly from python, with our certified
+protocols.
+
+References::
+
+  1. Z. Zhang, J. Yan, S. Lei, D. Yi, S. Z. Li: "A Face Antispoofing Database
+       with Diverse Attacks", In proceedings of the 5th IAPR International
+         Conference on Biometrics (ICB'12), New Delhi, India, 2012.
 
 You would normally not install this package unless you are maintaining it. What
 you would do instead is to tie it in at the package you need to **use** it.
@@ -27,7 +37,7 @@ The package is available in two different distribution formats:
 1. You can download it from `PyPI <http://pypi.python.org/pypi>`_, or
 
 2. You can download it in its source form from `its git repository
-   <https://github.com/bioidiap/bob.db.replay>`_. When you download the
+   <https://github.com/bioidiap/bob.db.casia_fasd>`_. When you download the
    version at the git repository, you will need to run a command to recreate
    the backend SQLite file required for its operation. This means that the
    database raw files must be installed somewhere in this case. With option
@@ -47,11 +57,11 @@ script)::
 
     install_requires=[
       ...
-      "bob.db.replay >= 1.1",
+      "bob.db.casia_fasd >= 1.1",
     ],
 
 Proceed normally with your ``boostrap/buildout`` steps and you should be all
-set. That means you can now import ``bob.db.replay`` into your scripts.
+set. That means you can now import ``bob.db.casia_fasd`` into your scripts.
 
 Modify your buildout.cfg and download from git
 ==============================================
@@ -67,8 +77,8 @@ lines::
   auto-checkout = *
   eggs = bob
          ...
-         bob.db.replay
+         bob.db.casia_fasd
 
   [sources]
-  bob.db.replay = git https://github.com/bioidiap/bob.db.replay.git
+  bob.db.casia_fasd = git https://github.com/bioidiap/bob.db.casia_fasd.git
   ...
