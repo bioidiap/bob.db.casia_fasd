@@ -15,8 +15,8 @@ protocols.
 References::
 
   1. Z. Zhang, J. Yan, S. Lei, D. Yi, S. Z. Li: "A Face Antispoofing Database
-       with Diverse Attacks", In proceedings of the 5th IAPR International
-         Conference on Biometrics (ICB'12), New Delhi, India, 2012.
+     with Diverse Attacks", In proceedings of the 5th IAPR International
+     Conference on Biometrics (ICB'12), New Delhi, India, 2012.
 
 You would normally not install this package unless you are maintaining it. What
 you would do instead is to tie it in at the package you need to **use** it.
