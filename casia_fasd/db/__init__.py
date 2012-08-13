@@ -335,3 +335,5 @@ class Database(object):
     fulldir = os.path.dirname(fullpath)
     utils.makedirs_safe(fulldir)
     save(obj, fullpath)
+
+__all__ = ['Database',]
