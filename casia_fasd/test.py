@@ -96,3 +96,25 @@ class FASDDatabaseTest(unittest.TestCase):
   def test04_checkfiles(self):
     from bob.db.script.dbmanage import main
     self.assertEqual(main('casia_fasd checkfiles --self-test'.split()), 0)
+  
+  def test05_manage_get(self):
+
+    from bob.db.script.dbmanage import main
+
+    self.assertEqual(main('casia_fasd get --dry-run'.split()), 0)
+    self.assertEqual(main('casia_fasd get --version=bla --dry-run'.split()), 0)
+    self.assertEqual(main('casia_fasd get --version=1.3.4 --verbose --dry-run'.split()), 0)
+
+  def test06_manage_put(self):
+
+    from bob.db.script.dbmanage import main
+
+    self.assertEqual(main('casia_fasd put --dry-run tmp'.split()), 0)
+    self.assertEqual(main('casia_fasd put --version=bla --dry-run tmp'.split()), 0)
+    self.assertEqual(main('casia_fasd put --version=1.3.4 --verbose --dry-run tmp'.split()), 0)
+
+  def test07_manage_location(self):
+
+    from bob.db.script.dbmanage import main
+
+    self.assertEqual(main('casia_fasd location'.split()), 0)
