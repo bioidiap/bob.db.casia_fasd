@@ -46,7 +46,7 @@ setup(
 
       # declare tests to bob
       'bob.test': [
-        'casia_fasd = casia_fasd.test',
+        'casia_fasd = casia_fasd.test:FASDDatabaseTest',
         ],
       },
 
