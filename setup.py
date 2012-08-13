@@ -38,10 +38,6 @@ setup(
     ],
 
     entry_points={
-      'console_scripts': [
-        # for tests or db creation, enable the following line:
-        #'replay_manager.py = bob.db.script.dbmanage:main',
-        ],
 
       # declare the database to bob
       'bob.db': [
