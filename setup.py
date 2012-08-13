@@ -39,7 +39,7 @@ setup(
 
     entry_points={
       'bob.db': [
-        'casia = casia_fasd.db',
+        'casia_fasd = casia_fasd.db',
         ]
       },
 
