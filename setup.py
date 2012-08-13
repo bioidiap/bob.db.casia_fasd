@@ -41,6 +41,9 @@ setup(
       'bob.db': [
         'casia_fasd = casia_fasd.db',
         ]
+      'bob.test': [
+        'casia_fasd = casia_fasd.test',
+        ]
       },
 
 )
