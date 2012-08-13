@@ -17,7 +17,9 @@ def dumplist(args):
   from .__init__ import Database
   db = Database()
 
-  r = db.files(directory=args.directory, extension=args.extension, groups=args.group, cls=args.cls, qualities=args.quality, types=args.type)
+  r = db.files(directory=args.directory, extension=args.extension,
+      groups=args.group, cls=args.cls, qualities=args.quality,
+      types=args.attack_type)
 
   output = sys.stdout
   if args.selftest:
@@ -35,7 +37,9 @@ def checkfiles(args):
   from .__init__ import Database
   db = Database()
 
-  r = db.files(directory=args.directory, extension=args.extension, groups=args.group, cls=args.cls, qualities=args.quality, types=args.type)
+  r = db.files(directory=args.directory, extension=args.extension,
+      groups=args.group, cls=args.cls, qualities=args.quality,
+      types=args.attack_type)
 
   # go through all files, check if they are available on the filesystem
   good = {}
@@ -94,7 +98,7 @@ def add_commands(parser):
   dump_parser.add_argument('-c', '--class', dest="cls", default=None, help="if given, limits the dump to a particular subset of the data that corresponds to the given class (defaults to '%(default)s')", choices=db.classes)
   dump_parser.add_argument('-g', '--group', dest="group", default=None, help="if given, this value will limit the output files to those belonging to a particular group. (defaults to '%(default)s')", choices=db.groups)
   dump_parser.add_argument('-q', '--quality', dest="quality", default=None, help="if given, this value will limit the output files to those belonging to a particular quality of recording. (defaults to '%(default)s')", choices=db.qualities)
-  dump_parser.add_argument('-t', '--type', dest="type", default=None, help="if given, this value will limit the output files to those belonging to a particular type of attack. (defaults to '%(default)s')", choices=db.types)
+  dump_parser.add_argument('-t', '--type', dest="attack_type", default=None, help="if given, this value will limit the output files to those belonging to a particular type of attack. (defaults to '%(default)s')", choices=db.types)
   dump_parser.add_argument('--self-test', dest="selftest", default=False, action='store_true', help=SUPPRESS)
   dump_parser.set_defaults(func=dumplist) #action
 
@@ -106,6 +110,6 @@ def add_commands(parser):
   check_parser.add_argument('-c', '--class', dest="cls", default=None, help="if given, limits the dump to a particular subset of the data that corresponds to the given class (defaults to '%(default)s')", choices=db.classes)
   check_parser.add_argument('-g', '--group', dest="group", default=None, help="if given, this value will limit the output files to those belonging to a particular group. (defaults to '%(default)s')", choices=db.groups)
   check_parser.add_argument('-q', '--quality', dest="quality", default=None, help="if given, this value will limit the output files to those belonging to a particular quality of recording. (defaults to '%(default)s')", choices=db.qualities)
-  check_parser.add_argument('-t', '--type', dest="type", default=None, help="if given, this value will limit the output files to those belonging to a particular type of attack. (defaults to '%(default)s')", choices=db.types)
+  check_parser.add_argument('-t', '--type', dest="attack_type", default=None, help="if given, this value will limit the output files to those belonging to a particular type of attack. (defaults to '%(default)s')", choices=db.types)
   check_parser.add_argument('--self-test', dest="selftest", default=False, action='store_true', help=SUPPRESS)
   check_parser.set_defaults(func=checkfiles) #action

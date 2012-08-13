@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
-#Ivana Chingovska <ivana.chingovska@idiap.ch>
-#Tue Mar  6 11:26:33 CET 2012
+# Ivana Chingovska <ivana.chingovska@idiap.ch>
+# Tue Mar  6 11:26:33 CET 2012
 #
 # Copyright (C) 2011-2012 Idiap Research Institute, Martigny, Switzerland
 # 
