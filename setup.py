@@ -22,7 +22,7 @@ setup(
 
     # Non-python data files to be shipped
     package_data = {
-      'iris': [
+      'casia_fasd': [
         'db/cross_valid.txt',
         'db/cut_attack.txt',
         'db/cut_warped_attack.txt',
