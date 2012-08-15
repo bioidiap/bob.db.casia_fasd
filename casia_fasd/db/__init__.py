@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-#Ivana Chingovska <ivana.chingovska@idiap.ch>
-#Mon Mar  5 15:38:22 CET 2012
+# vim: set fileencoding=utf-8 :
+# Ivana Chingovska <ivana.chingovska@idiap.ch>
+# Mon Mar  5 15:38:22 CET 2012
 
 """
 The CASIA-FASD database is a spoofing attack database which consists of three
@@ -19,52 +20,7 @@ References:
   Conference on Biometrics (ICB'12), New Delhi, India, 2012."""
 
 import os
-import sys
-import numpy
 from bob.db import utils
-from .commands import add_commands
-
-def dbname(): 
-  '''Returns a simple name for this database, w/o funny characters, spaces'''
-
-  return 'casia_fasd'
-
-def location():
-  '''Returns the directory that contains the data'''
-  
-  from os.path import dirname, realpath
-  return dirname(realpath(__file__))
-
-def files():
-  '''Returns a python iterable with all auxiliary files needed'''
-      
-  return (
-    'cross_valid.txt',
-    'cut_attack.txt',
-    'cut_warped_attack.txt',
-    'cut_warped_video_attack.txt',
-    'real.txt',
-    'video_attack.txt',
-    'warped_attack.txt',
-    )
-
-def version():
-  '''Returns the current version number defined in setup.py (DRY)'''
-
-  import pkg_resources  # part of setuptools
-  return pkg_resources.require('bob.db.%s' % dbname())[0].version
-
-def type():
-  '''Returns the type of auxiliary files you have for this database
-  
-  If you return 'sqlite', then we append special actions such as 'dbshell'
-  on 'bob_dbmanage.py' automatically for you. Otherwise, we don't. 
-
-  If you use auxiliary text files, just return 'text'. We may provide
-  special services for those types in the future.
-  '''
-
-  return 'text'
 
 class Database(object):
 

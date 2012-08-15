@@ -41,7 +41,7 @@ setup(
 
       # declare the database to bob
       'bob.db': [
-        'casia_fasd = casia_fasd.db',
+        'casia_fasd = casia_fasd.db.driver:Interface',
         ],
 
       # declare tests to bob
