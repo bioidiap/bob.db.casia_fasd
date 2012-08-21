@@ -13,9 +13,10 @@ setup(
     version='master',
     description='CASIA Face Anti-Spoofing Database Access API for Bob',
     url='http://github.com/bioidiap/bob.db.casia_fasd',
-    license='LICENSE.txt',
-    author_email='Andre Anjos <andre.anjos@idiap.ch>',
-    #long_description=open('doc/howto.rst').read(),
+    license='GPLv3',
+    author='Andre Anjos',
+    author_email='andre.anjos@idiap.ch',
+    long_description=open('README.rst').read(),
 
     # This line is required for any distutils based packaging.
     packages=find_packages(),
