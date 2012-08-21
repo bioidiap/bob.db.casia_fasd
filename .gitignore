@@ -9,4 +9,5 @@ parts
 *.egg-info
 src
 develop-eggs
-built-docs
+sphinx
+dist
