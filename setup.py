@@ -19,19 +19,8 @@ setup(
 
     # This line is required for any distutils based packaging.
     packages=find_packages(),
-
-    # Non-python data files to be shipped
-    package_data = {
-      'casia_fasd': [
-        'db/cross_valid.txt',
-        'db/cut_attack.txt',
-        'db/cut_warped_attack.txt',
-        'db/cut_warped_video_attack.txt',
-        'db/real.txt',
-        'db/video_attack.txt',
-        'db/warped_attack.txt',
-        ],
-      },
+    include_package_data=True,
+    zip_safe=False,
 
     install_requires=[
         "bob == master",  # base signal proc./machine learning library
