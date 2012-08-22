@@ -9,7 +9,7 @@ from setuptools import setup, find_packages
 # parameters that define our package.
 setup(
 
-    name='bob.db.casia_fasd',
+    name='xbob.db.casia_fasd',
     version='master',
     description='CASIA Face Anti-Spoofing Database Access API for Bob',
     url='http://github.com/bioidiap/bob.db.casia_fasd',
@@ -23,20 +23,26 @@ setup(
     include_package_data=True,
     zip_safe=False,
 
+    namespace_packages = [
+      'xbob',
+      'xbob.db',
+      ],
+
     install_requires=[
-        "bob",  # base signal proc./machine learning library
+      'setuptools',
+      'bob',  # base signal proc./machine learning library
     ],
 
     entry_points={
 
       # declare the database to bob
       'bob.db': [
-        'casia_fasd = casia_fasd.db.driver:Interface',
+        'casia_fasd = xbob.db.casia_fasd.driver:Interface',
         ],
 
       # declare tests to bob
       'bob.test': [
-        'casia_fasd = casia_fasd.test:FASDDatabaseTest',
+        'casia_fasd = xbob.db.casia_fasd.test:FASDDatabaseTest',
         ],
       },
 

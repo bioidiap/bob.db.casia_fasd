@@ -6,6 +6,6 @@
  CASIA Face Anti-Spoofing Database
 ===================================
 
-.. automodule:: casia_fasd.db
+.. automodule:: xbob.db.casia_fasd
 
-.. autoclass:: casia_fasd.db.Database
+.. autoclass:: xbob.db.casia_fasd.Database

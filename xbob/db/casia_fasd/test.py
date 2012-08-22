@@ -22,14 +22,14 @@
 
 import os, sys
 import unittest
-from . import db as casia_fasd
+from . import Database
 
 class FASDDatabaseTest(unittest.TestCase):
   """Performs various tests on the CASIA_FASD spoofing attack database."""
 
 
   def test01_query(self):
-    db = casia_fasd.Database()
+    db = Database()
     
     f = db.files()
     self.assertEqual(len(set(f.values())), 600) # number of all the videos in the database
@@ -66,7 +66,7 @@ class FASDDatabaseTest(unittest.TestCase):
     self.assertEqual(f[0], 'xxx/train_release/1/HR_4.avi')
 
   def test02_cross_valid(self): # testing the cross-validation subsets
-    db = casia_fasd.Database()
+    db = Database()
     '''
     db.cross_valid_gen(60, 60, 5) # 60 is the number of real samples as well as in each attack type of the database
     '''
