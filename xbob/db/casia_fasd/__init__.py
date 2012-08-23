@@ -25,16 +25,18 @@ from bob.db import utils
 class Database(object):
 
   def __init__(self):  
+    from .driver import Interface
+    self.info = Interface()
     self.groups = ('train', 'test')
     self.classes = ('attack', 'real')
     self.qualities = ('low','normal','high')
     self.types = ('warped', 'cut', 'video')
     self.ids = range(1, 51)
 
-  def dbname(self):
-    """Calculates my own name automatically."""
-    return os.path.basename(os.path.dirname(__file__))
-
+  def get_file(self, pc):
+    '''Returns the full file path given the path components pc'''
+    from pkg_resources import resource_filename
+    return resource_filename(__name__, os.path.join(pc))
 
   def files(self, directory=None, extension=None, ids=[], groups=None, cls=None, qualities=None, types=None):
     """Returns a set of filenames for the specific query by the user.
@@ -159,7 +161,7 @@ class Database(object):
       The filename of the output file
     """
     if outfilename == None:
-      outfilename = os.path.join(os.path.dirname(__file__), 'cross_valid.txt')
+      outfilename = self.get_file('cross_valid.txt')
     f = open(outfilename, 'w')
 
     def cross_valid(numsamples, numfolds): 
@@ -195,7 +197,7 @@ class Database(object):
       The input filename where the validation indices are stored
   """
     if infilename == None:
-      infilename = os.path.join(os.path.dirname(__file__), 'cross_valid.txt')
+      infilename = self.get_file('cross_valid.txt')
     lines = open(infilename, 'r').readlines()
     subsets_pos = [] 
     subsets_neg = []
@@ -233,14 +235,14 @@ class Database(object):
 
     if infilename == None:
       if cls == 'real':
-        infilename = os.path.join(os.path.dirname(__file__), 'real.txt')
+        infilename = self.get_file('real.txt')
       else:
         if 'warped' in types and 'cut' in types and 'video' in types: 
-          infilename = os.path.join(os.path.dirname(__file__), 'cut_warped_video_attack.txt')
+          infilename = self.get_file('cut_warped_video_attack.txt')
         elif 'warped' in types and 'cut' in types:
-          infilename = os.path.join(os.path.dirname(__file__), 'cut_warped_attack.txt')
+          infilename = self.get_file('cut_warped_attack.txt')
         else:
-          infilename = os.path.join(os.path.dirname(__file__), types+'_attack.txt')
+          infilename = self.get_file(types+'_attack.txt')
 
     lines = open(infilename, 'r').readlines()
     files_val = {} # the keys in the both dictionaries are just pro-forma, for compatibility with other databases

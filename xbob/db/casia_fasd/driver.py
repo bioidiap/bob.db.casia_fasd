@@ -70,12 +70,9 @@ class Interface(BaseInterface):
   def name(self):
     return 'casia_fasd'
 
-  def location(self):
-    from os.path import dirname, realpath
-    return dirname(realpath(__file__))
-
   def files(self):
-    return (
+    from pkg_resources import resource_filename
+    raw_files = (
       'cross_valid.txt',
       'cut_attack.txt',
       'cut_warped_attack.txt',
@@ -84,6 +81,7 @@ class Interface(BaseInterface):
       'video_attack.txt',
       'warped_attack.txt',
       )
+    return [resource_filename(__name__, k) for k in raw_files]
 
   def version(self):
     import pkg_resources  # part of setuptools

@@ -97,8 +97,8 @@ class FASDDatabaseTest(unittest.TestCase):
     from bob.db.script.dbmanage import main
     self.assertEqual(main('casia_fasd checkfiles --self-test'.split()), 0)
   
-  def test05_manage_location(self):
+  def test05_manage_files(self):
 
     from bob.db.script.dbmanage import main
 
-    self.assertEqual(main('casia_fasd location'.split()), 0)
+    self.assertEqual(main('casia_fasd files'.split()), 0)
