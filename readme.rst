@@ -61,7 +61,7 @@ script)::
     ],
 
 Proceed normally with your ``boostrap/buildout`` steps and you should be all
-set. That means you can now import the namespace ``casia_fasd`` into your
+set. That means you can now import the namespace ``xbob.db.casia_fasd`` into your
 scripts.
 
 Modify your buildout.cfg and download from git
