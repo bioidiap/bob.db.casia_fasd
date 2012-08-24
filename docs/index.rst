@@ -7,5 +7,3 @@
 ===================================
 
 .. automodule:: xbob.db.casia_fasd
-
-.. autoclass:: xbob.db.casia_fasd.Database
