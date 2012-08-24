@@ -57,7 +57,7 @@ script)::
 
     install_requires=[
       ...
-      "xbob.db.casia_fasd >= 1.1",
+      "xbob.db.casia_fasd",
     ],
 
 Proceed normally with your ``boostrap/buildout`` steps and you should be all
