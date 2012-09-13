@@ -102,3 +102,14 @@ class FASDDatabaseTest(unittest.TestCase):
     from bob.db.script.dbmanage import main
 
     self.assertEqual(main('casia_fasd files'.split()), 0)
+
+  def test06_query_facelocfile(self):
+
+    db = Database()
+    self.assertTrue(os.path.exists(db.facefiles(('test_release/1/HR_1',))[0]))
+
+  def test07_read_facebbx(self):
+
+    db = Database()
+    faceloc = db.facebbx(('test_release/1/1',))[0]
+    self.assertTrue(all(faceloc[0] == [0, 236, 177, 171, 171]))

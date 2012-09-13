@@ -20,6 +20,7 @@ References:
   Conference on Biometrics (ICB'12), New Delhi, India, 2012."""
 
 import os
+import numpy
 from bob.db import utils
 
 class Database(object):
@@ -142,7 +143,59 @@ class Database(object):
               
     return retval
          
+  def facefiles(self, filenames):
+    """Queries the files containing the face locations for the frames in the videos specified by the input parameter filenames
 
+    Keyword parameters:
+ 
+    filenames
+      The filenames of the videos. This object should be a python iterable (such as a tuple or list).
+
+    Returns: 
+      A list of filenames with face locations. The face location files contain the following information, tab delimited: 
+
+      * Frame number
+      * Bounding box top-left X coordinate 
+      * Bounding box top-left Y coordinate 
+      * Bounding box width 
+      * Bounding box height
+      
+      There is one row for each frame, and not all the frames contain detected faces
+    """
+    return [self.get_file(os.path.join('faces', stem + '.face')) for stem in filenames]
+
+  def facebbx(self, filenames):
+    """Reads the files containing the face locations for the frames in the videos specified by the input parameter filenames
+
+    Keyword parameters:
+ 
+    filenames
+      The filenames of the videos. This object should be a python iterable (such as a tuple or list).
+
+    Returns: 
+      A list of numpy.ndarrays containing information about the locatied faces in the videos. Each element in the list corresponds to one input filename. Each row of the numpy.ndarray corresponds for one frame. The five columns of the numpy.ndarray denote:
+
+      * Frame number
+      * Bounding box top-left X coordinate 
+      * Bounding box top-left Y coordinate 
+      * Bounding box width 
+      * Bounding box height
+      
+      Note that not all the frames contain detected faces.
+    """
+    facefiles = self.facefiles(filenames)
+    facesbbx = []
+    for facef in facefiles:
+      lines = open(facef, "r").readlines()
+      bbx = numpy.ndarray((len(lines), 5), dtype='int')
+      lc = 0
+      for l in lines:
+        words = l.split()
+        bbx[lc] = [int(w) for w in words]
+        lc+=1
+      facesbbx.append(bbx)
+    return facesbbx
+        
   def cross_valid_gen(self, numpos, numneg, numfolds=10, outfilename=None):
     """ Performs N-fold cross-validation on a given number of samples. Generates the indices of the validation subset for N folds, and writes them into a text file (the indices of the training samples are easy to compute once the indices of the validation subset are known). This method is intended for 2-class classification problems, therefore the number of both positive and negative samples should be given at the beginning. The method generates validation indices for both positive and negative samples separately. Each row of the output file are the validation indices of one fold; validation indices for the positive class are in the odd lines, and validation indices for the negative class are in the even lines.
 
