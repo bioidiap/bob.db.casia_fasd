@@ -103,6 +103,7 @@ class FASDDatabaseTest(unittest.TestCase):
 
     self.assertEqual(main('casia_fasd files'.split()), 0)
 
+  """
   def test06_query_facelocfile(self):
 
     db = Database()
@@ -113,3 +114,4 @@ class FASDDatabaseTest(unittest.TestCase):
     db = Database()
     faceloc = db.facebbx(('test_release/1/1',))[0]
     self.assertTrue(all(faceloc[0] == [0, 236, 177, 171, 171]))
+  """
