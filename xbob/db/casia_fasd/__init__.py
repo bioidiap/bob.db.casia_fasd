@@ -340,7 +340,7 @@ class Database(object):
       The extension determines the way each of the arrays will be saved.
     """
 
-    from ...io import save
+    from bob.io import save
 
     fullpath = os.path.join(directory, filename + extension)
     fulldir = os.path.dirname(fullpath)
