@@ -214,7 +214,7 @@ class Database(object):
       The filename of the output file
     """
     if outfilename == None:
-      outfilename = self.get_file('cross_valid.txt')
+      outfilename = self.get_file(os.path.join('folds', 'cross_valid.txt'))
     f = open(outfilename, 'w')
 
     def cross_valid(numsamples, numfolds): 
@@ -250,7 +250,7 @@ class Database(object):
       The input filename where the validation indices are stored
   """
     if infilename == None:
-      infilename = self.get_file('cross_valid.txt')
+      infilename = self.get_file(os.path.join('folds', 'cross_valid.txt'))
     lines = open(infilename, 'r').readlines()
     subsets_pos = [] 
     subsets_neg = []
@@ -288,14 +288,14 @@ class Database(object):
 
     if infilename == None:
       if cls == 'real':
-        infilename = self.get_file('real.txt')
+        infilename = self.get_file(os.path.join('folds', 'real.txt'))
       else:
         if 'warped' in types and 'cut' in types and 'video' in types: 
-          infilename = self.get_file('cut_warped_video_attack.txt')
+          infilename = self.get_file(os.path.join('folds', 'cut_warped_video_attack.txt'))
         elif 'warped' in types and 'cut' in types:
-          infilename = self.get_file('cut_warped_attack.txt')
+          infilename = self.get_file(os.path.join('folds', 'cut_warped_attack.txt'))
         else:
-          infilename = self.get_file(types+'_attack.txt')
+          infilename = self.get_file(os.path.join('folds', types+'_attack.txt'))
 
     lines = open(infilename, 'r').readlines()
     files_val = {} # the keys in the both dictionaries are just pro-forma, for compatibility with other databases
