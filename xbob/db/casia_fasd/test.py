@@ -103,14 +103,49 @@ class FASDDatabaseTest(unittest.TestCase):
 
     self.assertEqual(main('casia_fasd files'.split()), 0)
 
-  def test06_query_facelocfile(self):
-
+  def test06_query_obj(self):
     db = Database()
-    self.assertTrue(os.path.exists(db.facefiles(('test_release/1/HR_1',))[0]))
+    
+    fobj = db.objects()
+    self.assertEqual(len(fobj), 600) # number of all the videos in the database
 
-  def test07_read_facebbx(self):
+    fobj = db.objects(groups='train', ids=[21])
+    self.assertEqual(len(fobj), 0) # number of train videos for client 21
+   
+    fobj = db.objects(groups='test', cls='real')
+    self.assertEqual(len(fobj), 90) # number of real test videos (30 clients * 3 qualitites)
+    
+    fobj = db.objects(groups='test', cls='real', types='cut')
+    self.assertEqual(len(fobj), 0) # number of real test videos - cut attacks (can not be real and attacks at the same time of course)
 
-    db = Database()
-    faceloc = db.facebbx(('test_release/1/1',))[0]
-    self.assertTrue(all(faceloc[0] == [0, 236, 177, 171, 171]))
-  
+    fobj = db.objects(groups='train', cls='real', qualities='low')
+    self.assertEqual(len(fobj), 20) # number of real train videos with low quality (20 clients * 1 real low quality video)
+
+    fobj = db.objects(groups='train', cls='attack', qualities='normal')
+    self.assertEqual(len(fobj), 60) # number of real train videos with normal quality (20 clients * 3 attack types)
+
+    fobj = db.objects(groups='test', qualities='high')
+    self.assertEqual(len(fobj), 120) # number of real test videos with high quality (30 clients * 4 attack types)
+    
+    fobj = db.objects(groups='test', types='warped')
+    self.assertEqual(len(fobj), 90) # number of test warped videos (30 clients * 3 qualities)
+
+    fobj = db.objects(groups='test', types='video', qualities='high', ids=[1,2,3])
+    self.assertEqual(len(fobj), 0) # clients with ids 1, 2 and 3 are not in the test set
+
+    fobj = db.objects(groups='train', types='video', qualities='high', ids=[1,2,3])
+    self.assertEqual(len(fobj), 3) # number of high quality video attacks of clients 1, 2 and 3 (3 clients * 1)
+   
+    fobj = db.objects(groups='train', types='video', qualities='high', ids=1)
+    self.assertEqual(len(fobj), 1) # number of high quality video attacks of client 1(1 client * 1)
+    self.assertEqual(fobj[0].filename, 'train_release/1/HR_4')
+    self.assertEqual(fobj[0].make_path('xxx', '.avi'), 'xxx/train_release/1/HR_4.avi')
+
+    fobj = db.objects(groups='test', types='warped', qualities='low', ids=21)
+    self.assertEqual(len(fobj), 1) # number of high quality video attacks of client 21 (1 client * 1)
+    self.assertFalse(fobj[0].is_real())
+    self.assertEqual(fobj[0].get_clientid(), 21)
+    self.assertEqual(fobj[0].get_type(), 'warped')
+    self.assertEqual(fobj[0].get_quality(), 'low')
+    self.assertTrue(os.path.exists(fobj[0].facefile()))
+    

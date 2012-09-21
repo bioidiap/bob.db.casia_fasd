@@ -22,6 +22,7 @@ References:
 import os
 import numpy
 from bob.db import utils
+from .models import *
 
 class Database(object):
 
@@ -41,6 +42,10 @@ class Database(object):
 
   def files(self, directory=None, extension=None, ids=[], groups=None, cls=None, qualities=None, types=None):
     """Returns a set of filenames for the specific query by the user.
+
+    .. deprecated:: 1.1.0
+
+      This function is *deprecated*, use :py:meth:`.Database.objects` instead.
 
     Keyword Parameters:
 
@@ -77,6 +82,9 @@ class Database(object):
     the filtering criteria. The keys of the dictionary are just pro-forma (for uniformity with the other databases).
     """
 
+    import warnings
+    warnings.warn("The method Database.files() is deprecated, use Database.objects() for more powerful object retrieval", DeprecationWarning)
+
     def check_validity(l, obj, valid, default):
       """Checks validity of user input data against a set of valid values"""
       if not l: return default
@@ -90,7 +98,6 @@ class Database(object):
       if not extension: extension = ''
       if directory: return os.path.join(directory, stem + extension)
       return stem + extension
-
 
     # check if groups set are valid
     VALID_GROUPS = self.groups
@@ -142,59 +149,94 @@ class Database(object):
                 key = key + 1  
               
     return retval
-         
-  def facefiles(self, filenames):
-    """Queries the files containing the face locations for the frames in the videos specified by the input parameter filenames
 
-    Keyword parameters:
- 
-    filenames
-      The filenames of the videos. This object should be a python iterable (such as a tuple or list).
 
-    Returns: 
-      A list of filenames with face locations. The face location files contain the following information, tab delimited: 
+  def objects(self, ids=[], groups=None, cls=None, qualities=None, types=None):
+    """Returns a list of unique :py:class:`.File` objects for the specific query by the user.
 
-      * Frame number
-      * Bounding box top-left X coordinate 
-      * Bounding box top-left Y coordinate 
-      * Bounding box width 
-      * Bounding box height
-      
-      There is one row for each frame, and not all the frames contain detected faces
+    Keyword Parameters:
+
+    ids
+      The id of the client whose videos need to be retrieved. Should be an integer number in the range 1-50 (the total number of client is 50
+
+    groups
+      One of the protocolar subgroups of data as specified in the tuple groups, or a
+      tuple with several of them.  If you set this parameter to an empty string
+      or the value None, we use reset it to the default which is to get all.
+
+    cls
+      Either "attack", "real" or a combination of those (in a
+      tuple). Defines the class of data to be retrieved.  If you set this
+      parameter to an empty string or the value None, it will be set to the tuple ("real", "attack").
+
+    qualities
+      Either "low", "normal" or "high" or any combination of those (in a
+      tuple). Defines the qualities of the videos in the database that are going to be used. If you set this
+      parameter to the value None, the videos of all qualities are returned ("low", "normal", "high").
+
+    types
+      Either "warped", "cut" or "video" or any combination of those (in a
+      tuple). Defines the types of attack videos in the database that are going to be used. If you set this
+      parameter to the value None, the videos of all the attack types are returned ("warped", "cut", "video").
+
+    Returns: A list of :py:class:`.File` objects.
     """
-    return [self.get_file(os.path.join('faces', stem + '.face')) for stem in filenames]
 
-  def facebbx(self, filenames):
-    """Reads the files containing the face locations for the frames in the videos specified by the input parameter filenames
+    def check_validity(l, obj, valid, default):
+      """Checks validity of user input data against a set of valid values"""
+      if not l: return default
+      elif isinstance(l, str) or isinstance(l, int): return check_validity((l,), obj, valid, default) 
+      for k in l:
+        if k not in valid:
+          raise RuntimeError, 'Invalid %s "%s". Valid values are %s, or lists/tuples of those' % (obj, k, valid)
+      return l
 
-    Keyword parameters:
- 
-    filenames
-      The filenames of the videos. This object should be a python iterable (such as a tuple or list).
+    # check if groups set are valid
+    VALID_GROUPS = self.groups
+    groups = check_validity(groups, "group", VALID_GROUPS, VALID_GROUPS)
 
-    Returns: 
-      A list of numpy.ndarrays containing information about the locatied faces in the videos. Each element in the list corresponds to one input filename. Each row of the numpy.ndarray corresponds for one frame. The five columns of the numpy.ndarray denote:
+    # by default, do NOT grab enrollment data from the database
+    VALID_CLASSES = self.classes
+    VALID_TYPES = self.types
+    if cls == None and types != None: # types are strictly specified which means we don't need the calss of real accesses
+      cls = ('attack',)
+    else:
+      cls = check_validity(cls, "class", VALID_CLASSES, ('real', 'attack'))
 
-      * Frame number
-      * Bounding box top-left X coordinate 
-      * Bounding box top-left Y coordinate 
-      * Bounding box width 
-      * Bounding box height
-      
-      Note that not all the frames contain detected faces.
-    """
-    facefiles = self.facefiles(filenames)
-    facesbbx = []
-    for facef in facefiles:
-      lines = open(facef, "r").readlines()
-      bbx = numpy.ndarray((len(lines), 5), dtype='int')
-      lc = 0
-      for l in lines:
-        words = l.split()
-        bbx[lc] = [int(w) for w in words]
-        lc+=1
-      facesbbx.append(bbx)
-    return facesbbx
+    # check if video quality types are valid
+    VALID_QUALITIES = self.qualities
+    qualities = check_validity(qualities, "quality", VALID_QUALITIES, VALID_QUALITIES)
+
+    # check if attack types are valid
+
+    if cls != ('real',): # if the class is 'real' only, then there is no need for types to be reset to the default (real accesses have no types)
+      types = check_validity(types, "type", VALID_TYPES, VALID_TYPES)
+  
+    VALID_IDS = self.ids
+    ids = check_validity(ids, "id", VALID_IDS, VALID_IDS)
+
+    retval = []
+    
+    db_mappings = {'real_normal':'1', 'real_low':'2', 'real_high':'HR_1', 'warped_normal':'3', 'warped_low':'4', 'warped_high':'HR_2', 'cut_normal':'5', 'cut_low':'6', 'cut_high':'HR_3', 'video_normal':'7', 'video_low':'8', 'video_high':'HR_4'}    
+
+    # identitites in the training set are assigned ids 1-20, identities in the test set are assigned ids 21-50
+    for i in ids:
+      for g in groups:
+        if (g == 'train' and i > 20) or (g == 'test' and i <= 20): continue;
+        cur_id = i 
+        if g == 'test': cur_id = i - 20; # the id within the group subset
+        folder_name = g + '_release'
+        for q in qualities:
+          if cls == ('real',) and types != None: continue; # category real + any type does not exist 
+          for c in cls:          
+            if c == 'real': # the class real doesn't have any different types, only the attacks can be of different type
+              filename = os.path.join(folder_name, "%d" % cur_id, db_mappings[c + '_' + q])
+              retval.append(File(filename, c, g))
+            else:  
+              for t in types:
+                filename = os.path.join(folder_name, "%d" % cur_id, db_mappings[t + '_' + q])
+                retval.append(File(filename, c, g))              
+    return retval
         
   def cross_valid_gen(self, numpos, numneg, numfolds=10, outfilename=None):
     """ Performs N-fold cross-validation on a given number of samples. Generates the indices of the validation subset for N folds, and writes them into a text file (the indices of the training samples are easy to compute once the indices of the validation subset are known). This method is intended for 2-class classification problems, therefore the number of both positive and negative samples should be given at the beginning. The method generates validation indices for both positive and negative samples separately. Each row of the output file are the validation indices of one fold; validation indices for the positive class are in the odd lines, and validation indices for the negative class are in the even lines.
@@ -265,6 +307,10 @@ class Database(object):
   def cross_valid_foldfiles(self, cls, types=None, infilename=None, fold_no=0, directory=None, extension=None):
     """ Returns two dictionaries: one with the names of the files of the validation subset in one fold, and one with the names of the files in the training subset of that fold. The number of the cross_validation fold is given as a parameter.
 
+    .. deprecated:: 1.1.0
+
+      This function is *deprecated*, use :py:meth:`.Database.objects` instead.
+
     Keyword parameters:
 
     cls
@@ -285,6 +331,9 @@ class Database(object):
     extension
       This parameter will be appended to all the filenames which are going to be returned by this procedure
   """
+
+    import warnings
+    warnings.warn("The method Database.cross_valid_foldfiles() is deprecated, use Database.cross_valid_foldobjects() for more powerful object retrieval", DeprecationWarning)
 
     if infilename == None:
       if cls == 'real':
@@ -316,9 +365,54 @@ class Database(object):
 
     return files_val, files_train
      
+  def cross_valid_foldobjects(self, cls, types=None, infilename=None, fold_no=0):
+    """ Returns two dictionaries: one with the names of the files of the validation subset in one fold, and one with the names of the files in the training subset of that fold. The number of the cross_validation fold is given as a parameter.
+
+    Keyword parameters:
+
+    cls
+      The class of the samples: 'real' or 'attack'
+  
+    types
+      Type of the database that is going to be used: 'warped', 'cut' or 'video' or a tuple of these
+  
+    infilename
+      The name of the file where the cross-validation files are stored. If it is None, then the name of the filename with the cross-validation files is formed using the parameters version and cls. If this parameter is specified, then the parameters version and cls are ignored
+
+    fold_no
+      Number of the fold 
+  """
+
+    if infilename == None:
+      if cls == 'real':
+        infilename = self.get_file(os.path.join('folds', 'real.txt'))
+      else:
+        if 'warped' in types and 'cut' in types and 'video' in types: 
+          infilename = self.get_file(os.path.join('folds', 'cut_warped_video_attack.txt'))
+        elif 'warped' in types and 'cut' in types:
+          infilename = self.get_file(os.path.join('folds', 'cut_warped_attack.txt'))
+        else:
+          infilename = self.get_file(os.path.join('folds', types+'_attack.txt'))
+
+    lines = open(infilename, 'r').readlines()
+    obj_val = []
+    obj_train = []
+    
+    for line in lines:
+      words = line.rstrip('\n\t').split('\t')
+      if int(words[1]) == fold_no:
+        obj_val.append(File(words[0], cls, 'dev')) # the file still belongs to the training set, but is in dev set in cross-validation
+      else:
+        obj_train.append(File(words[0], cls, 'train'))
+
+    return obj_val, obj_train
 
   def save_by_filename(self, filename, obj, directory, extension):
     """Saves a single object supporting the bob save() protocol.
+
+    .. deprecated:: 1.1.0
+
+      This function is *deprecated*, use :py:meth:`.File.save()` instead.
 
     This method will call save() on the the given object using the correct
     database filename stem for the given filename
@@ -339,6 +433,9 @@ class Database(object):
     extension
       The extension determines the way each of the arrays will be saved.
     """
+
+    import warnings
+    warnings.warn("The method Database.save() is deprecated, use the File object directly as returned by Database.objects() for more powerful object manipulation.", DeprecationWarning)
 
     from bob.io import save
 
