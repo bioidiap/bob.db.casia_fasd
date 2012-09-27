@@ -17,39 +17,35 @@ from . import Database
 def dumplist(args):
   """Dumps lists of files based on your criteria"""
 
-  from .__init__ import Database
+  #from .__init__ import Database
   db = Database()
 
-  r = db.files(directory=args.directory, extension=args.extension,
-      groups=args.group, cls=args.cls, qualities=args.quality,
-      types=args.attack_type)
+  objects = db.objects(groups=args.group, cls=args.cls, qualities=args.quality, types=args.attack_type)
 
   output = sys.stdout
   if args.selftest:
     from bob.db.utils import null
     output = null()
 
-  for id, f in r.items():
-    output.write('%s\n' % (f,))
+  for obj in objects:
+    output.write('%s\n' % (obj.make_path(directory=args.directory, extension=args.extension),))
 
   return 0
 
 def checkfiles(args):
   """Checks the existence of the files based on your criteria""" 
     
-  from .__init__ import Database
+  #from .__init__ import Database
   db = Database()
 
-  r = db.files(directory=args.directory, extension=args.extension,
-      groups=args.group, cls=args.cls, qualities=args.quality,
-      types=args.attack_type)
+  objects = db.objects(groups=args.group, cls=args.cls, qualities=args.quality, types=args.attack_type)
 
   # go through all files, check if they are available on the filesystem
-  good = {}
-  bad = {}
-  for id, f in r.items():
-    if os.path.exists(f): good[id] = f
-    else: bad[id] = f
+  good = []
+  bad = []
+  for obj in objects:
+    if os.path.exists(obj.make_path(directory=args.directory, extension=args.extension)): good.append(obj)
+    else: bad.append(obj)
 
   # report
   output = sys.stdout
@@ -58,10 +54,10 @@ def checkfiles(args):
     output = null()
 
   if bad:
-    for id, f in bad.items():
-      output.write('Cannot find file "%s"\n' % (f,))
+    for obj in bad:
+      output.write('Cannot find file "%s"\n' % (obj.make_path(directory=args.directory, extension=args.extension),))
     output.write('%d files (out of %d) were not found at "%s"\n' % \
-        (len(bad), len(r), args.directory))
+        (len(bad), len(objects), args.directory))
 
   return 0
 

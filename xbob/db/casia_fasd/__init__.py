@@ -444,4 +444,4 @@ class Database(object):
     utils.makedirs_safe(fulldir)
     save(obj, fullpath)
 
-__all__ = ['Database',]
+__all__ = dir()
