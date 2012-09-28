@@ -3,6 +3,7 @@
 #Fri Sep 21 11:16:16 CEST 2012
 
 import os
+import bob
 
 class File(object):
   """ Generic file container """
@@ -144,7 +145,7 @@ class File(object):
     """
 
     path = self.make_path(directory, extension)
-    bob.utils.makedirs_safe(os.path.dirname(path))
+    bob.db.utils.makedirs_safe(os.path.dirname(path))
     bob.io.save(data, path)
 
 
