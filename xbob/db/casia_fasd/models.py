@@ -97,6 +97,19 @@ class File(object):
         directory = self.get_file('face-locations')
     return self.make_path(directory, '.face')
 
+  def videofile(self, directory=None):
+    """Returns the path to the database video file for this object
+
+    Keyword parameters:
+
+    directory
+      An optional directory name that will be prefixed to the returned result.
+
+    Returns a string containing the video file path.
+    """
+
+    return self.make_path(directory, '.avi')
+
 
   def bbx(self, directory=None):
     """Reads the file containing the face locations for the frames in the
