@@ -35,6 +35,15 @@ class Database(object):
     self.types = ('warped', 'cut', 'video')
     self.ids = range(1, 51)
 
+  def check_validity(self, l, obj, valid, default):
+      """Checks validity of user input data against a set of valid values"""
+      if not l: return default
+      elif isinstance(l, str) or isinstance(l, int): return self.check_validity((l,), obj, valid, default) 
+      for k in l:
+        if k not in valid:
+          raise RuntimeError, 'Invalid %s "%s". Valid values are %s, or lists/tuples of those' % (obj, k, valid)
+      return l
+
   def get_file(self, pc):
     '''Returns the full file path given the path components pc'''
     from pkg_resources import resource_filename
@@ -85,15 +94,6 @@ class Database(object):
     import warnings
     warnings.warn("The method Database.files() is deprecated, use Database.objects() for more powerful object retrieval", DeprecationWarning)
 
-    def check_validity(l, obj, valid, default):
-      """Checks validity of user input data against a set of valid values"""
-      if not l: return default
-      elif isinstance(l, str) or isinstance(l, int): return check_validity((l,), obj, valid, default) 
-      for k in l:
-        if k not in valid:
-          raise RuntimeError, 'Invalid %s "%s". Valid values are %s, or lists/tuples of those' % (obj, k, valid)
-      return l
-
     def make_path(stem, directory, extension):
       if not extension: extension = ''
       if directory: return os.path.join(directory, stem + extension)
@@ -101,7 +101,7 @@ class Database(object):
 
     # check if groups set are valid
     VALID_GROUPS = self.groups
-    groups = check_validity(groups, "group", VALID_GROUPS, VALID_GROUPS)
+    groups = self.check_validity(groups, "group", VALID_GROUPS, VALID_GROUPS)
 
     # by default, do NOT grab enrollment data from the database
     VALID_CLASSES = self.classes
@@ -109,19 +109,19 @@ class Database(object):
     if cls == None and types != None: # types are strictly specified which means we don't need the calss of real accesses
       cls = ('attack',)
     else:
-      cls = check_validity(cls, "class", VALID_CLASSES, ('real', 'attack'))
+      cls = self.check_validity(cls, "class", VALID_CLASSES, ('real', 'attack'))
 
     # check if video quality types are valid
     VALID_QUALITIES = self.qualities
-    qualities = check_validity(qualities, "quality", VALID_QUALITIES, VALID_QUALITIES)
+    qualities = self.check_validity(qualities, "quality", VALID_QUALITIES, VALID_QUALITIES)
 
     # check if attack types are valid
 
     if cls != ('real',): # if the class is 'real' only, then there is no need for types to be reset to the default (real accesses have no types)
-      types = check_validity(types, "type", VALID_TYPES, VALID_TYPES)
+      types = self.check_validity(types, "type", VALID_TYPES, VALID_TYPES)
   
     VALID_IDS = self.ids
-    ids = check_validity(ids, "id", VALID_IDS, VALID_IDS)
+    ids = self.check_validity(ids, "id", VALID_IDS, VALID_IDS)
 
     retval = {}
     key = 0
@@ -182,18 +182,9 @@ class Database(object):
     Returns: A list of :py:class:`.File` objects.
     """
 
-    def check_validity(l, obj, valid, default):
-      """Checks validity of user input data against a set of valid values"""
-      if not l: return default
-      elif isinstance(l, str) or isinstance(l, int): return check_validity((l,), obj, valid, default) 
-      for k in l:
-        if k not in valid:
-          raise RuntimeError, 'Invalid %s "%s". Valid values are %s, or lists/tuples of those' % (obj, k, valid)
-      return l
-
     # check if groups set are valid
     VALID_GROUPS = self.groups
-    groups = check_validity(groups, "group", VALID_GROUPS, VALID_GROUPS)
+    groups = self.check_validity(groups, "group", VALID_GROUPS, VALID_GROUPS)
 
     # by default, do NOT grab enrollment data from the database
     VALID_CLASSES = self.classes
@@ -201,19 +192,19 @@ class Database(object):
     if cls == None and types != None: # types are strictly specified which means we don't need the calss of real accesses
       cls = ('attack',)
     else:
-      cls = check_validity(cls, "class", VALID_CLASSES, ('real', 'attack'))
+      cls = self.check_validity(cls, "class", VALID_CLASSES, ('real', 'attack'))
 
     # check if video quality types are valid
     VALID_QUALITIES = self.qualities
-    qualities = check_validity(qualities, "quality", VALID_QUALITIES, VALID_QUALITIES)
+    qualities = self.check_validity(qualities, "quality", VALID_QUALITIES, VALID_QUALITIES)
 
     # check if attack types are valid
 
     if cls != ('real',): # if the class is 'real' only, then there is no need for types to be reset to the default (real accesses have no types)
-      types = check_validity(types, "type", VALID_TYPES, VALID_TYPES)
+      types = self.check_validity(types, "type", VALID_TYPES, VALID_TYPES)
   
     VALID_IDS = self.ids
-    ids = check_validity(ids, "id", VALID_IDS, VALID_IDS)
+    ids = self.check_validity(ids, "id", VALID_IDS, VALID_IDS)
 
     retval = []
     
@@ -335,16 +326,20 @@ class Database(object):
     import warnings
     warnings.warn("The method Database.cross_valid_foldfiles() is deprecated, use Database.cross_valid_foldobjects() for more powerful object retrieval", DeprecationWarning)
 
+    import ipdb; ipdb.set_trace()
+    VALID_TYPES = self.types
+
     if infilename == None:
       if cls == 'real':
         infilename = self.get_file(os.path.join('folds', 'real.txt'))
       else:
+        types = self.check_validity(types, "type", VALID_TYPES, VALID_TYPES)
         if 'warped' in types and 'cut' in types and 'video' in types: 
           infilename = self.get_file(os.path.join('folds', 'cut_warped_video_attack.txt'))
         elif 'warped' in types and 'cut' in types:
           infilename = self.get_file(os.path.join('folds', 'cut_warped_attack.txt'))
         else:
-          infilename = self.get_file(os.path.join('folds', types+'_attack.txt'))
+          infilename = self.get_file(os.path.join('folds', types[0]+'_attack.txt'))
 
     lines = open(infilename, 'r').readlines()
     files_val = {} # the keys in the both dictionaries are just pro-forma, for compatibility with other databases
@@ -382,17 +377,20 @@ class Database(object):
     fold_no
       Number of the fold 
   """
+  
+    VALID_TYPES = self.types
 
     if infilename == None:
       if cls == 'real':
         infilename = self.get_file(os.path.join('folds', 'real.txt'))
       else:
+        types = self.check_validity(types, "type", VALID_TYPES, VALID_TYPES)
         if 'warped' in types and 'cut' in types and 'video' in types: 
           infilename = self.get_file(os.path.join('folds', 'cut_warped_video_attack.txt'))
         elif 'warped' in types and 'cut' in types:
           infilename = self.get_file(os.path.join('folds', 'cut_warped_attack.txt'))
         else:
-          infilename = self.get_file(os.path.join('folds', types+'_attack.txt'))
+          infilename = self.get_file(os.path.join('folds', types[0]+'_attack.txt'))
 
     lines = open(infilename, 'r').readlines()
     obj_val = []
