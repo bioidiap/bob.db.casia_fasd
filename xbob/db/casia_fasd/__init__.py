@@ -326,7 +326,6 @@ class Database(object):
     import warnings
     warnings.warn("The method Database.cross_valid_foldfiles() is deprecated, use Database.cross_valid_foldobjects() for more powerful object retrieval", DeprecationWarning)
 
-    import ipdb; ipdb.set_trace()
     VALID_TYPES = self.types
 
     if infilename == None:
