@@ -139,6 +139,25 @@ class File(object):
     return numpy.loadtxt(self.facefile(directory), dtype=int)
  
 
+  def load(self, directory=None, extension='.hdf5'):
+    """Loads the data at the specified location and using the given extension.
+
+    Keyword parameters:
+
+    data
+      The data blob to be saved (normally a :py:class:`numpy.ndarray`).
+
+    directory
+      [optional] If not empty or None, this directory is prefixed to the final
+      file destination
+
+    extension
+      [optional] The extension of the filename - this will control the type of
+      output and the codec for saving the input blob.
+    """
+    return bob.io.load(self.make_path(directory, extension))
+
+
   def save(self, data, directory=None, extension='.hdf5'):
     """Saves the input data at the specified location and using the given
     extension.
