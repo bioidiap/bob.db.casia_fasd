@@ -21,6 +21,9 @@ class File(FileBase):
   videofile.__doc__ = FileBase.videofile.__doc__
 
   def facefile(self, directory=None):
+
+    if directory!=None: 
+      directory = os.path.join(directory, 'face-locations')
     return self.__f.facefile(directory=directory)
   facefile.__doc__ = FileBase.facefile.__doc__
 
