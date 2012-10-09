@@ -6,9 +6,9 @@
 """CASIA Face-AntiSpoofing Database (FASD) implementation as antispoofing.utils.db.Database."""
 
 import os
-import xbob.db.casia_fasd
-from . import File as FileBase
-from . import Database as DatabaseBase
+from . import __doc__ as long_description
+from . import File as CasiaFASDFile, Database as CasiaFASDDatabase
+from antispoofing.utils.db import File as FileBase, Database as DatabaseBase
 
 class File(FileBase):
 
@@ -41,10 +41,10 @@ class File(FileBase):
   make_path.__doc__ = FileBase.make_path.__doc__
 
 class Database(DatabaseBase):
-  __doc__ = xbob.db.casia_fasd.__doc__
+  __doc__ = long_description
 
   def __init__ (self, args=None):
-    self.__db = xbob.db.casia_fasd.Database()
+    self.__db = CasiaFASDDatabase()
     self.__kwargs = {}
     if args is not None:
 
@@ -68,7 +68,7 @@ class Database(DatabaseBase):
 
     p.add_argument('--types', type=str, choices=self.__db.types, dest='casia_types', help='Defines the types of attack videos in the database that are going to be used (if not set return all types)')
 
-    p.add_argument('--fold-number', '--fold-no', '--fold_no', type=int, default=1, dest='casia_fold_number', help='Number of the fold (defaults to "%(default)s")')
+    p.add_argument('--fold-number', choices=(1,2,3,4,5), type=int, default=1, dest='casia_fold_number', help='Number of the fold (defaults to %(default)s)')
 
     p.set_defaults(name=entry_point_name)
     p.set_defaults(cls=Database)
@@ -84,6 +84,17 @@ class Database(DatabaseBase):
     return Database.__doc__
   long_description.__doc__ = DatabaseBase.long_description.__doc__
  
+  def implements_any_of(self, propname):
+    if isinstance(propname, (tuple,list)):
+      return 'video' in propname
+    elif propname is None:
+      return True
+    elif isinstance(propname, (str,unicode)):
+      return 'video' == propname
+
+    # does not implement the given access protocol
+    return False
+ 
   def __parse_arguments(self):
 
     types = self.__kwargs.get('types', self.__db.types)
@@ -97,8 +108,7 @@ class Database(DatabaseBase):
     _, trainReal   = self.__db.cross_valid_foldobjects(cls='real', fold_no=fold_no)
     _, trainAttack = self.__db.cross_valid_foldobjects(cls='attack', types=types, fold_no=fold_no)
 
-    return [CasiaFASDFile(f) for f in trainReal], \
-        [CasiaFASDFile(f) for f in trainAttack]
+    return [File(f) for f in trainReal], [File(f) for f in trainAttack]
   get_train_data.__doc__ = DatabaseBase.get_train_data.__doc__
 
   def get_devel_data(self):
@@ -110,8 +120,7 @@ class Database(DatabaseBase):
 
     develAttack, _ = self.__db.cross_valid_foldobjects(cls='attack', types=types, fold_no=fold_no)
     
-    return [CasiaFASDFile(f) for f in develReal], \
-        [CasiaFASDFile(f) for f in develAttack]
+    return [File(f) for f in develReal], [File(f) for f in develAttack]
   get_devel_data.__doc__ = DatabaseBase.get_devel_data.__doc__
 
   def get_test_data(self):
@@ -122,8 +131,7 @@ class Database(DatabaseBase):
     testReal = self.__db.objects(groups='test', cls='real')
     testAttack = self.__db.objects(groups='test', cls='attack', types=types)
 
-    return [CasiaFASDFile(f) for f in testReal], \
-        [CasiaFASDFile(f) for f in testAttack]
+    return [File(f) for f in testReal], [File(f) for f in testAttack]
   get_test_data.__doc__ = DatabaseBase.get_test_data.__doc__
 
   def get_all_data(self):
@@ -134,6 +142,5 @@ class Database(DatabaseBase):
     allReal   = self.__db.objects(cls='real')
     allAttacks  = self.__db.objects(cls='attack',types=types)
 
-    return [CasiaFASDFile(f) for f in allReal], \
-        [CasiaFASDFile(f) for f in allAttacks]
+    return [File(f) for f in allReal], [File(f) for f in allAttacks]
   get_all_data.__doc__ = DatabaseBase.get_all_data.__doc__
