@@ -55,10 +55,18 @@ class Database(DatabaseBase):
   __init__.__doc__ = DatabaseBase.__init__.__doc__
 
   def create_subparser(self, subparser, entry_point_name):
+    
+    from argparse import RawDescriptionHelpFormatter
 
-    p = subparser.add_parser(entry_point_name, help=self.long_description())
+    ## remove '.. ' lines from rst
+    desc = '\n'.join([k for k in self.long_description().split('\n') if k.strip().find('.. ') != 0])
 
-    p.add_argument('--types', type=str, choices=self.__db.types, dest='casia_types', help='Defines the types of attack videos in the database that are going to be used (if not set return all types; possible values are "%s")' % '|'.join(self.__db.types))
+    p = subparser.add_parser(entry_point_name, 
+        help=self.short_description(),
+        description=desc,
+        formatter_class=RawDescriptionHelpFormatter)
+
+    p.add_argument('--types', type=str, choices=self.__db.types, dest='casia_types', help='Defines the types of attack videos in the database that are going to be used (if not set return all types)')
 
     p.add_argument('--fold-number', '--fold-no', '--fold_no', type=int, default=1, dest='casia_fold_number', help='Number of the fold (defaults to "%(default)s")')
 
