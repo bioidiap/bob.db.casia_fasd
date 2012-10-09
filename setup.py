@@ -30,7 +30,8 @@ setup(
 
     install_requires=[
       'setuptools',
-      'bob',  # base signal proc./machine learning library
+      'bob >= 1.1.0',
+      'antispoofing.utils',
     ],
 
     entry_points={
@@ -43,6 +44,11 @@ setup(
       # declare tests to bob
       'bob.test': [
         'casia_fasd = xbob.db.casia_fasd.test:FASDDatabaseTest',
+        ],
+      
+      # antispoofing database declaration
+      'antispoofing.utils.db': [
+        'casia_fasd = xbob.db.casia_fasd.spoofing:Database',
         ],
       },
 
