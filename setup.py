@@ -10,9 +10,9 @@ from setuptools import setup, find_packages
 setup(
 
     name='xbob.db.casia_fasd',
-    version='1.0.0a1',
+    version='1.0.1a0',
     description='CASIA Face Anti-Spoofing Database Access API for Bob',
-    url='http://github.com/bioidiap/bob.db.casia_fasd',
+    url='http://pypi.python.org/pypi/xbob.db.casia_fasd',
     license='GPLv3',
     author='Andre Anjos',
     author_email='andre.anjos@idiap.ch',
@@ -51,5 +51,15 @@ setup(
         'casia_fasd = xbob.db.casia_fasd.spoofing:Database',
         ],
       },
+
+    classifiers = [
+      'Development Status :: 5 - Production/Stable',
+      'Intended Audience :: Science/Research',
+      'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+      'Natural Language :: English',
+      'Programming Language :: Python',
+      'Topic :: Scientific/Engineering :: Artificial Intelligence',
+      'Topic :: Database :: Front-Ends',
+      ],
 
 )
