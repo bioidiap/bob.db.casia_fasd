@@ -208,7 +208,7 @@ class Database(object):
 
     retval = []
     
-    db_mappings = {'real_normal':'1', 'real_low':'2', 'real_high':'HR_1', 'warped_normal':'3', 'warped_low':'4', 'warped_high':'HR_2', 'cut_normal':'5', 'cut_low':'6', 'cut_high':'HR_3', 'video_normal':'7', 'video_low':'8', 'video_high':'HR_4'}    
+    db_mappings = {'real_normal':'1', 'real_low':'2', 'real_high':'HR_1', 'warped_normal':'3', 'warped_low':'4', 'warped_high':'HR_2', 'cut_normal':'5', 'cut_low':'6', 'cut_high':'HR_3', 'video_normal':'7', 'video_low':'8', 'video_high':'HR_4'}
 
     # identitites in the training set are assigned ids 1-20, identities in the test set are assigned ids 21-50
     for i in ids:
@@ -359,7 +359,7 @@ class Database(object):
 
     return files_val, files_train
      
-  def cross_valid_foldobjects(self, cls, types=None, infilename=None, fold_no=0):
+  def cross_valid_foldobjects(self, cls, types=None, qualities=None, infilename=None, fold_no=0):
     """ Returns two dictionaries: one with the names of the files of the validation subset in one fold, and one with the names of the files in the training subset of that fold. The number of the cross_validation fold is given as a parameter.
 
     Keyword parameters:
@@ -369,6 +369,11 @@ class Database(object):
   
     types
       Type of the database that is going to be used: 'warped', 'cut' or 'video' or a tuple of these
+
+    qualities
+      Either "low", "normal" or "high" or any combination of those (in a
+      tuple). Defines the qualities of the videos in the database that are going to be used. If you set this
+      parameter to the value None, the videos of all qualities are returned ("low", "normal", "high").
   
     infilename
       The name of the file where the cross-validation files are stored. If it is None, then the name of the filename with the cross-validation files is formed using the parameters version and cls. If this parameter is specified, then the parameters version and cls are ignored
@@ -378,6 +383,9 @@ class Database(object):
   """
   
     VALID_TYPES = self.types
+
+    VALID_QUALITIES = self.qualities
+    qualities = self.check_validity(qualities, "quality", VALID_QUALITIES, VALID_QUALITIES)
 
     if infilename == None:
       if cls == 'real':
@@ -397,10 +405,15 @@ class Database(object):
     
     for line in lines:
       words = line.rstrip('\n\t').split('\t')
+
       if int(words[1]) == fold_no:
-        obj_val.append(File(words[0], cls, 'dev')) # the file still belongs to the training set, but is in dev set in cross-validation
+        f = File(words[0], cls, 'dev')
+        if f.get_quality() in qualities:
+          obj_val.append(f) # the file still belongs to the training set, but is in dev set in cross-validation
       else:
-        obj_train.append(File(words[0], cls, 'train'))
+        f = File(words[0], cls, 'train')
+        if f.get_quality() in qualities:
+          obj_train.append(f)
 
     return obj_val, obj_train
 

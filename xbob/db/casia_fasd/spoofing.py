@@ -62,6 +62,7 @@ class Database(DatabaseBase):
 
       self.__kwargs = {
         'types': args.casia_types,
+        'qualities': args.casia_qualities,
         'fold_no': args.casia_fold_number,
       }
   __init__.__doc__ = DatabaseBase.__init__.__doc__
@@ -79,6 +80,8 @@ class Database(DatabaseBase):
         formatter_class=RawDescriptionHelpFormatter)
 
     p.add_argument('--types', type=str, choices=self.__db.types, dest='casia_types', help='Defines the types of attack videos in the database that are going to be used (if not set return all types)')
+
+    p.add_argument('--qualities', type=str, choices=self.__db.qualities, dest='casia_qualities', help='Defines the qualities of attack videos in the database that are going to be used (if not set return all qualities)')
 
     p.add_argument('--fold-number', choices=(1,2,3,4,5), type=int, default=1, dest='casia_fold_number', help='Number of the fold (defaults to %(default)s)')
 
@@ -110,15 +113,16 @@ class Database(DatabaseBase):
   def __parse_arguments(self):
 
     types = self.__kwargs.get('types', self.__db.types)
+    qualities = self.__kwargs.get('qualities', self.__db.qualities)
     if not types: types = self.__db.types
-    return types, self.__kwargs.get('fold_no', 1)
+    return types, qualities, self.__kwargs.get('fold_no', 1)
 
   def get_train_data(self):
 
-    types, fold_no = self.__parse_arguments()
+    types, qualities, fold_no = self.__parse_arguments()
 
-    _, trainReal   = self.__db.cross_valid_foldobjects(cls='real', fold_no=fold_no)
-    _, trainAttack = self.__db.cross_valid_foldobjects(cls='attack', types=types, fold_no=fold_no)
+    _, trainReal   = self.__db.cross_valid_foldobjects(cls='real', fold_no=fold_no, qualities=qualities)
+    _, trainAttack = self.__db.cross_valid_foldobjects(cls='attack', types=types, fold_no=fold_no, qualities=qualities)
 
     return [File(f) for f in trainReal], [File(f) for f in trainAttack]
   get_train_data.__doc__ = DatabaseBase.get_train_data.__doc__
@@ -126,11 +130,11 @@ class Database(DatabaseBase):
   def get_devel_data(self):
     __doc__ = DatabaseBase.get_devel_data.__doc__
 
-    types, fold_no = self.__parse_arguments()
+    types, qualities, fold_no = self.__parse_arguments()
 
-    develReal, _   = self.__db.cross_valid_foldobjects(cls='real', fold_no=fold_no)
+    develReal, _   = self.__db.cross_valid_foldobjects(cls='real', fold_no=fold_no, qualities=qualities)
 
-    develAttack, _ = self.__db.cross_valid_foldobjects(cls='attack', types=types, fold_no=fold_no)
+    develAttack, _ = self.__db.cross_valid_foldobjects(cls='attack', types=types, fold_no=fold_no, qualities=qualities)
     
     return [File(f) for f in develReal], [File(f) for f in develAttack]
   get_devel_data.__doc__ = DatabaseBase.get_devel_data.__doc__
@@ -138,10 +142,10 @@ class Database(DatabaseBase):
   def get_test_data(self):
     __doc__ = DatabaseBase.get_test_data.__doc__
 
-    types, _ = self.__parse_arguments()
+    types, qualities, _ = self.__parse_arguments()
 
-    testReal = self.__db.objects(groups='test', cls='real')
-    testAttack = self.__db.objects(groups='test', cls='attack', types=types)
+    testReal = self.__db.objects(groups='test', cls='real', qualities=qualities)
+    testAttack = self.__db.objects(groups='test', cls='attack', types=types, qualities=qualities)
 
     return [File(f) for f in testReal], [File(f) for f in testAttack]
   get_test_data.__doc__ = DatabaseBase.get_test_data.__doc__
@@ -149,10 +153,10 @@ class Database(DatabaseBase):
   def get_all_data(self):
     __doc__ = DatabaseBase.get_all_data.__doc__
 
-    types, _ = self.__parse_arguments()
+    types, qualities, _ = self.__parse_arguments()
 
-    allReal   = self.__db.objects(cls='real')
-    allAttacks  = self.__db.objects(cls='attack',types=types)
+    allReal   = self.__db.objects(cls='real', qualities=qualities)
+    allAttacks  = self.__db.objects(cls='attack',types=types, qualities=qualities)
 
     return [File(f) for f in allReal], [File(f) for f in allAttacks]
   get_all_data.__doc__ = DatabaseBase.get_all_data.__doc__
