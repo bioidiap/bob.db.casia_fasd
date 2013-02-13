@@ -23,12 +23,14 @@
 import os, sys
 import unittest
 from . import Database
+from nose.plugins.skip import SkipTest
 
 class FASDDatabaseTest(unittest.TestCase):
   """Performs various tests on the CASIA_FASD spoofing attack database."""
 
-  """
   def test01_query(self):
+    
+    raise SkipTest('Tests deprecated methods')
     db = Database()
     
     f = db.files()
@@ -64,7 +66,7 @@ class FASDDatabaseTest(unittest.TestCase):
     f = db.files(directory = 'xxx', extension='.avi', groups='train', types='video', qualities='high', ids=1)
     self.assertEqual(len(set(f.values())), 1) # number of high quality video attacks of client 1(1 client * 1)
     self.assertEqual(f[0], 'xxx/train_release/1/HR_4.avi')
-  """
+  
 
   
   def test02_cross_valid(self): # testing the cross-validation subsets
