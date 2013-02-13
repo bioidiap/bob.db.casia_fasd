@@ -10,7 +10,7 @@ from setuptools import setup, find_packages
 setup(
 
     name='xbob.db.casia_fasd',
-    version='1.0.2a0',
+    version='1.0.2',
     description='CASIA Face Anti-Spoofing Database Access API for Bob',
     url='http://pypi.python.org/pypi/xbob.db.casia_fasd',
     license='GPLv3',
