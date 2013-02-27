@@ -91,6 +91,16 @@ class Database(DatabaseBase):
     return
   create_subparser.__doc__ = DatabaseBase.create_subparser.__doc__
 
+  def name(self):
+    from .driver import Interface
+    i = Interface()
+    return "Replay Attack Database (%s)" % i.name()
+
+  def version(self):
+    from .driver import Interface
+    i = Interface()
+    return i.version()
+  
   def short_description(self):
     return 'CASIA Face Anti-Spoofing database (FASD)'
   short_description.__doc__ = DatabaseBase.short_description.__doc__
@@ -149,6 +159,12 @@ class Database(DatabaseBase):
 
     return [File(f) for f in testReal], [File(f) for f in testAttack]
   get_test_data.__doc__ = DatabaseBase.get_test_data.__doc__
+
+  def get_test_filters(self):
+    raise NotImplementedError, "Test filters have not yet been implemented for this database"
+  
+  def get_filtered_test_data(self, filter):
+    raise NotImplementedError, "Test filters have not yet been implemented for this database"
 
   def get_all_data(self):
     __doc__ = DatabaseBase.get_all_data.__doc__
