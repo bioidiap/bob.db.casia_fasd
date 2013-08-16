@@ -33,7 +33,7 @@ class Database(object):
     self.classes = ('attack', 'real')
     self.qualities = ('low','normal','high')
     self.types = ('warped', 'cut', 'video')
-    self.ids = range(1, 51)
+    self.ids = list(range(1, 51))
 
   def check_validity(self, l, obj, valid, default):
       """Checks validity of user input data against a set of valid values"""
@@ -41,7 +41,7 @@ class Database(object):
       elif isinstance(l, str) or isinstance(l, int): return self.check_validity((l,), obj, valid, default) 
       for k in l:
         if k not in valid:
-          raise RuntimeError, 'Invalid %s "%s". Valid values are %s, or lists/tuples of those' % (obj, k, valid)
+          raise RuntimeError('Invalid %s "%s". Valid values are %s, or lists/tuples of those' % (obj, k, valid))
       return l
 
   def get_file(self, pc):
@@ -253,10 +253,10 @@ class Database(object):
     def cross_valid(numsamples, numfolds): 
       ''' The actual cross-validation function, returns the validation indices in a tab-delimited null-terminated string'''
       from random import shuffle 
-      X = range(0, numsamples)
+      X = list(range(0, numsamples))
       shuffle(X)
       retval = []
-      for k in xrange(numfolds):
+      for k in range(numfolds):
         tr = [X[i] for i in range(0, numsamples) if i % numfolds != k]
         vl = [X[i] for i in range(0, numsamples) if i % numfolds == k]
         valid = ""

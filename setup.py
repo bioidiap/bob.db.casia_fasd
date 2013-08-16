@@ -45,7 +45,7 @@ setup(
       'bob.test': [
         'casia_fasd = xbob.db.casia_fasd.test:FASDDatabaseTest',
         ],
-      
+
       # antispoofing database declaration
       'antispoofing.utils.db': [
         'casia_fasd = xbob.db.casia_fasd.spoofing:Database',
@@ -58,6 +58,7 @@ setup(
       'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
       'Natural Language :: English',
       'Programming Language :: Python',
+      'Programming Language :: Python :: 3',
       'Topic :: Scientific/Engineering :: Artificial Intelligence',
       'Topic :: Database :: Front-Ends',
       ],

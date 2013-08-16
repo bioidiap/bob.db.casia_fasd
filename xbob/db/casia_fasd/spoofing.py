@@ -114,7 +114,7 @@ class Database(DatabaseBase):
       return 'video' in propname
     elif propname is None:
       return True
-    elif isinstance(propname, (str,unicode)):
+    elif isinstance(propname, str):
       return 'video' == propname
 
     # does not implement the given access protocol
@@ -161,10 +161,10 @@ class Database(DatabaseBase):
   get_test_data.__doc__ = DatabaseBase.get_test_data.__doc__
 
   def get_test_filters(self):
-    raise NotImplementedError, "Test filters have not yet been implemented for this database"
+    raise NotImplementedError("Test filters have not yet been implemented for this database")
   
   def get_filtered_test_data(self, filter):
-    raise NotImplementedError, "Test filters have not yet been implemented for this database"
+    raise NotImplementedError("Test filters have not yet been implemented for this database")
 
   def get_all_data(self):
     __doc__ = DatabaseBase.get_all_data.__doc__
