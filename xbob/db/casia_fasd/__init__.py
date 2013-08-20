@@ -20,13 +20,14 @@ References:
   Conference on Biometrics (ICB'12), New Delhi, India, 2012."""
 
 import os
+import six
 import numpy
 from bob.db import utils
 from .models import *
 
 class Database(object):
 
-  def __init__(self):  
+  def __init__(self):
     from .driver import Interface
     self.info = Interface()
     self.groups = ('train', 'test')
@@ -38,7 +39,7 @@ class Database(object):
   def check_validity(self, l, obj, valid, default):
       """Checks validity of user input data against a set of valid values"""
       if not l: return default
-      elif isinstance(l, str) or isinstance(l, int): return self.check_validity((l,), obj, valid, default) 
+      elif isinstance(l, six.string_types) or isinstance(l, six.integer_types): return self.check_validity((l,), obj, valid, default)
       for k in l:
         if k not in valid:
           raise RuntimeError('Invalid %s "%s". Valid values are %s, or lists/tuples of those' % (obj, k, valid))
@@ -119,35 +120,35 @@ class Database(object):
 
     if cls != ('real',): # if the class is 'real' only, then there is no need for types to be reset to the default (real accesses have no types)
       types = self.check_validity(types, "type", VALID_TYPES, VALID_TYPES)
-  
+
     VALID_IDS = self.ids
     ids = self.check_validity(ids, "id", VALID_IDS, VALID_IDS)
 
     retval = {}
     key = 0
-    
-    db_mappings = {'real_normal':'1', 'real_low':'2', 'real_high':'HR_1', 'warped_normal':'3', 'warped_low':'4', 'warped_high':'HR_2', 'cut_normal':'5', 'cut_low':'6', 'cut_high':'HR_3', 'video_normal':'7', 'video_low':'8', 'video_high':'HR_4'}    
+
+    db_mappings = {'real_normal':'1', 'real_low':'2', 'real_high':'HR_1', 'warped_normal':'3', 'warped_low':'4', 'warped_high':'HR_2', 'cut_normal':'5', 'cut_low':'6', 'cut_high':'HR_3', 'video_normal':'7', 'video_low':'8', 'video_high':'HR_4'}
 
     # identitites in the training set are assigned ids 1-20, identities in the test set are assigned ids 21-50
     for i in ids:
       for g in groups:
         if (g == 'train' and i > 20) or (g == 'test' and i <= 20): continue;
-        cur_id = i 
+        cur_id = i
         if g == 'test': cur_id = i - 20; # the id within the group subset
         folder_name = g + '_release'
         for q in qualities:
-          if cls == ('real',) and types != None: continue; # category real + any type does not exist 
-          for c in cls:          
+          if cls == ('real',) and types != None: continue; # category real + any type does not exist
+          for c in cls:
             if c == 'real': # the class real doesn't have any different types, only the attacks can be of different type
               name = os.path.join(folder_name, "%d" % cur_id, db_mappings[c + '_' + q])
               retval[key] = make_path(name, directory, extension)
-              key = key + 1  
-            else:  
+              key = key + 1
+            else:
               for t in types:
                 name = os.path.join(folder_name, "%d" % cur_id, db_mappings[t + '_' + q])
                 retval[key] = make_path(name, directory, extension)
-                key = key + 1  
-              
+                key = key + 1
+
     return retval
 
 
@@ -202,38 +203,38 @@ class Database(object):
 
     if cls != ('real',): # if the class is 'real' only, then there is no need for types to be reset to the default (real accesses have no types)
       types = self.check_validity(types, "type", VALID_TYPES, VALID_TYPES)
-  
+
     VALID_IDS = self.ids
     ids = self.check_validity(ids, "id", VALID_IDS, VALID_IDS)
 
     retval = []
-    
+
     db_mappings = {'real_normal':'1', 'real_low':'2', 'real_high':'HR_1', 'warped_normal':'3', 'warped_low':'4', 'warped_high':'HR_2', 'cut_normal':'5', 'cut_low':'6', 'cut_high':'HR_3', 'video_normal':'7', 'video_low':'8', 'video_high':'HR_4'}
 
     # identitites in the training set are assigned ids 1-20, identities in the test set are assigned ids 21-50
     for i in ids:
       for g in groups:
         if (g == 'train' and i > 20) or (g == 'test' and i <= 20): continue;
-        cur_id = i 
+        cur_id = i
         if g == 'test': cur_id = i - 20; # the id within the group subset
         folder_name = g + '_release'
         for q in qualities:
-          if cls == ('real',) and types != None: continue; # category real + any type does not exist 
-          for c in cls:          
+          if cls == ('real',) and types != None: continue; # category real + any type does not exist
+          for c in cls:
             if c == 'real': # the class real doesn't have any different types, only the attacks can be of different type
               filename = os.path.join(folder_name, "%d" % cur_id, db_mappings[c + '_' + q])
               retval.append(File(filename, c, g))
-            else:  
+            else:
               for t in types:
                 filename = os.path.join(folder_name, "%d" % cur_id, db_mappings[t + '_' + q])
-                retval.append(File(filename, c, g))              
+                retval.append(File(filename, c, g))
     return retval
-        
+
   def cross_valid_gen(self, numpos, numneg, numfolds=10, outfilename=None):
     """ Performs N-fold cross-validation on a given number of samples. Generates the indices of the validation subset for N folds, and writes them into a text file (the indices of the training samples are easy to compute once the indices of the validation subset are known). This method is intended for 2-class classification problems, therefore the number of both positive and negative samples should be given at the beginning. The method generates validation indices for both positive and negative samples separately. Each row of the output file are the validation indices of one fold; validation indices for the positive class are in the odd lines, and validation indices for the negative class are in the even lines.
 
     Keyword parameters:
-   
+
     numpos
       Number of positive samples
 
@@ -250,9 +251,9 @@ class Database(object):
       outfilename = self.get_file(os.path.join('folds', 'cross_valid.txt'))
     f = open(outfilename, 'w')
 
-    def cross_valid(numsamples, numfolds): 
+    def cross_valid(numsamples, numfolds):
       ''' The actual cross-validation function, returns the validation indices in a tab-delimited null-terminated string'''
-      from random import shuffle 
+      from random import shuffle
       X = list(range(0, numsamples))
       shuffle(X)
       retval = []
@@ -285,14 +286,14 @@ class Database(object):
     if infilename == None:
       infilename = self.get_file(os.path.join('folds', 'cross_valid.txt'))
     lines = open(infilename, 'r').readlines()
-    subsets_pos = [] 
+    subsets_pos = []
     subsets_neg = []
     linenum = 1
     for line in lines:
       ind_list = [int(i) for i in line.rstrip('\n\t').split('\t')]
       if linenum % 2 == 1: subsets_pos.append(ind_list) # odd lines: validation indices for the positive class
       else: subsets_neg.append(ind_list) # even lines: validation indices for the negative class
-      linenum += 1 
+      linenum += 1
     return subsets_pos, subsets_neg
 
   def cross_valid_foldfiles(self, cls, types=None, infilename=None, fold_no=0, directory=None, extension=None):
@@ -306,15 +307,15 @@ class Database(object):
 
     cls
       The class of the samples: 'real' or 'attack'
-  
+
     types
       Type of the database that is going to be used: 'warped', 'cut' or 'video' or a tuple of these
-  
+
     infilename
       The name of the file where the cross-validation files are stored. If it is None, then the name of the filename with the cross-validation files is formed using the parameters version and cls. If this parameter is specified, then the parameters version and cls are ignored
 
     fold_no
-      Number of the fold 
+      Number of the fold
 
     directory
       This parameter will be prepended to all the filenames which are going to be returned by this procedure
@@ -333,7 +334,7 @@ class Database(object):
         infilename = self.get_file(os.path.join('folds', 'real.txt'))
       else:
         types = self.check_validity(types, "type", VALID_TYPES, VALID_TYPES)
-        if 'warped' in types and 'cut' in types and 'video' in types: 
+        if 'warped' in types and 'cut' in types and 'video' in types:
           infilename = self.get_file(os.path.join('folds', 'cut_warped_video_attack.txt'))
         elif 'warped' in types and 'cut' in types:
           infilename = self.get_file(os.path.join('folds', 'cut_warped_attack.txt'))
@@ -344,12 +345,12 @@ class Database(object):
     files_val = {} # the keys in the both dictionaries are just pro-forma, for compatibility with other databases
     files_train = {}
     k_val = 0; k_train = 0 # simple counters
-    
+
     def make_path(stem, directory, extension):
       if not extension: extension = ''
       if directory: return os.path.join(directory, stem + extension)
       return stem + extension
-   
+
     for line in lines:
       words = line.rstrip('\n\t').split('\t')
       if int(words[1]) == fold_no:
@@ -358,7 +359,7 @@ class Database(object):
         files_train[k_train] = make_path(words[0], directory, extension); k_train += 1
 
     return files_val, files_train
-     
+
   def cross_valid_foldobjects(self, cls, types=None, qualities=None, infilename=None, fold_no=0):
     """ Returns two dictionaries: one with the names of the files of the validation subset in one fold, and one with the names of the files in the training subset of that fold. The number of the cross_validation fold is given as a parameter.
 
@@ -366,7 +367,7 @@ class Database(object):
 
     cls
       The class of the samples: 'real' or 'attack'
-  
+
     types
       Type of the database that is going to be used: 'warped', 'cut' or 'video' or a tuple of these
 
@@ -374,14 +375,14 @@ class Database(object):
       Either "low", "normal" or "high" or any combination of those (in a
       tuple). Defines the qualities of the videos in the database that are going to be used. If you set this
       parameter to the value None, the videos of all qualities are returned ("low", "normal", "high").
-  
+
     infilename
       The name of the file where the cross-validation files are stored. If it is None, then the name of the filename with the cross-validation files is formed using the parameters version and cls. If this parameter is specified, then the parameters version and cls are ignored
 
     fold_no
-      Number of the fold 
+      Number of the fold
   """
-  
+
     VALID_TYPES = self.types
 
     VALID_QUALITIES = self.qualities
@@ -392,7 +393,7 @@ class Database(object):
         infilename = self.get_file(os.path.join('folds', 'real.txt'))
       else:
         types = self.check_validity(types, "type", VALID_TYPES, VALID_TYPES)
-        if 'warped' in types and 'cut' in types and 'video' in types: 
+        if 'warped' in types and 'cut' in types and 'video' in types:
           infilename = self.get_file(os.path.join('folds', 'cut_warped_video_attack.txt'))
         elif 'warped' in types and 'cut' in types:
           infilename = self.get_file(os.path.join('folds', 'cut_warped_attack.txt'))
@@ -402,7 +403,7 @@ class Database(object):
     lines = open(infilename, 'r').readlines()
     obj_val = []
     obj_train = []
-    
+
     for line in lines:
       words = line.rstrip('\n\t').split('\t')
 
@@ -426,7 +427,7 @@ class Database(object):
 
     This method will call save() on the the given object using the correct
     database filename stem for the given filename
-    
+
     Keyword Parameters:
 
     filename
