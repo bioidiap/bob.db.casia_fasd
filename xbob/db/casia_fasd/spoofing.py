@@ -95,7 +95,7 @@ class Database(DatabaseBase):
   def name(self):
     from .driver import Interface
     i = Interface()
-    return "Replay Attack Database (%s)" % i.name()
+    return "CASIA FASD database (%s)" % i.name()
 
   def version(self):
     from .driver import Interface
