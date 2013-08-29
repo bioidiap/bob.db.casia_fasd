@@ -27,49 +27,8 @@ from nose.plugins.skip import SkipTest
 
 class FASDDatabaseTest(unittest.TestCase):
   """Performs various tests on the CASIA_FASD spoofing attack database."""
-
-  def test01_query(self):
-    
-    raise SkipTest('Tests deprecated methods')
-    db = Database()
-    
-    f = db.files()
-    self.assertEqual(len(set(f.values())), 600) # number of all the videos in the database
-
-    f = db.files(groups='train', ids=[21])
-    self.assertEqual(len(set(f.values())), 0) # number of train videos for client 21
-   
-    f = db.files(groups='test', cls='real')
-    self.assertEqual(len(set(f.values())), 90) # number of real test videos (30 clients * 3 qualitites)
-    
-    f = db.files(groups='test', cls='real', types='cut')
-    self.assertEqual(len(set(f.values())), 0) # number of real test videos - cut attacks (can not be real and attacks at the same time of course)
-
-    f = db.files(groups='train', cls='real', qualities='low')
-    self.assertEqual(len(set(f.values())), 20) # number of real train videos with low quality (20 clients * 1 real low quality video)
-
-    f = db.files(groups='train', cls='attack', qualities='normal')
-    self.assertEqual(len(set(f.values())), 60) # number of real train videos with normal quality (20 clients * 3 attack types)
-
-    f = db.files(groups='test', qualities='high')
-    self.assertEqual(len(set(f.values())), 120) # number of real test videos with high quality (30 clients * 4 attack types)
-    
-    f = db.files(groups='test', types='warped')
-    self.assertEqual(len(set(f.values())), 90) # number of test warped videos (30 clients * 3 qualities)
-
-    f = db.files(groups='test', types='video', qualities='high', ids=[1,2,3])
-    self.assertEqual(len(set(f.values())), 0) # clients with ids 1, 2 and 3 are not in the test set
-
-    f = db.files(groups='train', types='video', qualities='high', ids=[1,2,3])
-    self.assertEqual(len(set(f.values())), 3) # number of high quality video attacks of clients 1, 2 and 3 (3 clients * 1)
-   
-    f = db.files(directory = 'xxx', extension='.avi', groups='train', types='video', qualities='high', ids=1)
-    self.assertEqual(len(set(f.values())), 1) # number of high quality video attacks of client 1(1 client * 1)
-    self.assertEqual(f[0], 'xxx/train_release/1/HR_4.avi')
   
-
-  
-  def test02_cross_valid(self): # testing the cross-validation subsets
+  def test01_cross_valid(self): # testing the cross-validation subsets
     db = Database()
     '''
     db.cross_valid_gen(60, 60, 5) # 60 is the number of real samples as well as in each attack type of the database
@@ -97,21 +56,21 @@ class FASDDatabaseTest(unittest.TestCase):
     self.assertEqual(len(files_real_train), 144) # number of samples in training subset of all attacks
   
 
-  def test03_dumplist(self):
+  def test02_dumplist(self):
     from bob.db.script.dbmanage import main
     self.assertEqual(main('casia_fasd dumplist --self-test'.split()), 0)
 
-  def test04_checkfiles(self):
+  def test03_checkfiles(self):
     from bob.db.script.dbmanage import main
     self.assertEqual(main('casia_fasd checkfiles --self-test'.split()), 0)
   
-  def test05_manage_files(self):
+  def test04_manage_files(self):
 
     from bob.db.script.dbmanage import main
 
     self.assertEqual(main('casia_fasd files'.split()), 0)
 
-  def test06_query_obj(self):
+  def test05_query_obj(self):
     db = Database()
     
     fobj = db.objects()
