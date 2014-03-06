@@ -55,7 +55,6 @@ class FASDDatabaseTest(unittest.TestCase):
     self.assertEqual(len(files_real_val), 36) # number of samples in validation subset of all attacks
     self.assertEqual(len(files_real_train), 144) # number of samples in training subset of all attacks
   
-
   def test02_dumplist(self):
     from bob.db.script.dbmanage import main
     self.assertEqual(main('casia_fasd dumplist --self-test'.split()), 0)
@@ -115,4 +114,32 @@ class FASDDatabaseTest(unittest.TestCase):
     self.assertEqual(fobj[0].get_type(), 'warped')
     self.assertEqual(fobj[0].get_quality(), 'low')
     self.assertTrue(os.path.exists(fobj[0].facefile()))
+    
+  def test06_cross_valid(self): # testing the cross-validation subsets
+    db = Database('folds')
+    '''
+    db.cross_valid_gen(60, 60, 5) # 60 is the number of real samples as well as in each attack type of the database
+    '''
+    subsets_real, subsets_attack = db.cross_valid_read()
+    self.assertEqual(len(subsets_real), 5)
+    self.assertEqual(len(subsets_attack), 5)
+    for i in range(0,5):
+      self.assertEqual(len(subsets_real[i]), 12)
+      self.assertEqual(len(subsets_attack[i]), 12)
+    files_real_val, files_real_train = db.cross_valid_foldobjects(cls='real', fold_no=1)
+    self.assertEqual(len(files_real_val), 12) # number of samples in validation subset of real accesses
+    self.assertEqual(len(files_real_train), 48) # number of samples in training subset of real accesses
+    files_real_val, files_real_train = db.cross_valid_foldobjects(types='warped', cls='attack', fold_no=2)
+    self.assertEqual(len(files_real_val), 12) # number of samples in validation subset of warped attacks
+    self.assertEqual(len(files_real_train), 48) # number of samples in training subset of warped attacks
+    files_real_val, files_real_train = db.cross_valid_foldobjects(types=('warped', 'cut'), cls='attack', fold_no=3)
+    self.assertEqual(len(files_real_val), 24) # number of samples in validation subset of warped and cut attacks
+    self.assertEqual(len(files_real_train), 96) # number of samples in training subset of of warped and cut attacks
+    files_real_val, files_real_train = db.cross_valid_foldobjects(types=('warped', 'cut', 'video'), cls='attack', fold_no=4)
+    self.assertEqual(len(files_real_val), 36) # number of samples in validation subset of all attacks
+    self.assertEqual(len(files_real_train), 144) # number of samples in training subset of all attacks
+    files_real_val, files_real_train = db.cross_valid_foldobjects(types=None, cls='attack', fold_no=4)
+    self.assertEqual(len(files_real_val), 36) # number of samples in validation subset of all attacks
+    self.assertEqual(len(files_real_train), 144) # number of samples in training subset of all attacks
+  
     
