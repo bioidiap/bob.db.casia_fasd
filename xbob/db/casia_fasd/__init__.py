@@ -27,7 +27,8 @@ from .models import *
 
 class Database(object):
 
-  def __init__(self):
+  def __init__(self, foldsdir=None):
+    
     from .driver import Interface
     self.info = Interface()
     self.groups = ('train', 'test')
@@ -35,6 +36,14 @@ class Database(object):
     self.qualities = ('low','normal','high')
     self.types = ('warped', 'cut', 'video')
     self.ids = list(range(1, 51))
+    if foldsdir == None:
+      self.foldsdir = 'folds'
+    else:
+      self.foldsdir = foldsdir  
+
+  def set_foldsdir(self, foldsdir):
+    """Sets the directory holding the cross validation protocol of the database"""
+    self.foldsdir = foldsdir
 
   def check_validity(self, l, obj, valid, default):
       """Checks validity of user input data against a set of valid values"""
@@ -48,6 +57,8 @@ class Database(object):
   def get_file(self, pc):
     '''Returns the full file path given the path components pc'''
     from pkg_resources import resource_filename
+    if os.path.isabs(pc):
+      return pc
     return resource_filename(__name__, os.path.join(pc))
 
   def files(self, directory=None, extension=None, ids=[], groups=None, cls=None, qualities=None, types=None):
@@ -248,7 +259,7 @@ class Database(object):
       The filename of the output file
     """
     if outfilename == None:
-      outfilename = self.get_file(os.path.join('folds', 'cross_valid.txt'))
+      outfilename = self.get_file(os.path.join(self.foldsdir, 'cross_valid.txt'))
     f = open(outfilename, 'w')
 
     def cross_valid(numsamples, numfolds):
@@ -275,16 +286,13 @@ class Database(object):
     f.close()
     return 0
 
-  def cross_valid_read(self, infilename=None):
+  def cross_valid_read(self):
     """ Reads the cross-validation indices from a file and returns two lists of validation indices: for the positive and for the negative class. Each list actually consists of sublists; one sublist with validation indices for each fold.
 
     Keyword parameters:
 
-    infilename:
-      The input filename where the validation indices are stored
   """
-    if infilename == None:
-      infilename = self.get_file(os.path.join('folds', 'cross_valid.txt'))
+    infilename = self.get_file(os.path.join(self.foldsdir, 'cross_valid.txt'))
     lines = open(infilename, 'r').readlines()
     subsets_pos = []
     subsets_neg = []
@@ -296,7 +304,7 @@ class Database(object):
       linenum += 1
     return subsets_pos, subsets_neg
 
-  def cross_valid_foldfiles(self, cls, types=None, infilename=None, fold_no=0, directory=None, extension=None):
+  def cross_valid_foldfiles(self, cls, types=None, fold_no=0, directory=None, extension=None):
     """ Returns two dictionaries: one with the names of the files of the validation subset in one fold, and one with the names of the files in the training subset of that fold. The number of the cross_validation fold is given as a parameter.
 
     .. deprecated:: 1.1.0
@@ -310,9 +318,6 @@ class Database(object):
 
     types
       Type of the database that is going to be used: 'warped', 'cut' or 'video' or a tuple of these
-
-    infilename
-      The name of the file where the cross-validation files are stored. If it is None, then the name of the filename with the cross-validation files is formed using the parameters version and cls. If this parameter is specified, then the parameters version and cls are ignored
 
     fold_no
       Number of the fold
@@ -329,17 +334,16 @@ class Database(object):
 
     VALID_TYPES = self.types
 
-    if infilename == None:
-      if cls == 'real':
-        infilename = self.get_file(os.path.join('folds', 'real.txt'))
+    if cls == 'real':
+      infilename = self.get_file(os.path.join(self.foldsdir, 'real.txt'))
+    else:
+      types = self.check_validity(types, "type", VALID_TYPES, VALID_TYPES)
+      if 'warped' in types and 'cut' in types and 'video' in types:
+        infilename = self.get_file(os.path.join(self.foldsdir, 'cut_warped_video_attack.txt'))
+      elif 'warped' in types and 'cut' in types:
+        infilename = self.get_file(os.path.join(self.foldsdir, 'cut_warped_attack.txt'))
       else:
-        types = self.check_validity(types, "type", VALID_TYPES, VALID_TYPES)
-        if 'warped' in types and 'cut' in types and 'video' in types:
-          infilename = self.get_file(os.path.join('folds', 'cut_warped_video_attack.txt'))
-        elif 'warped' in types and 'cut' in types:
-          infilename = self.get_file(os.path.join('folds', 'cut_warped_attack.txt'))
-        else:
-          infilename = self.get_file(os.path.join('folds', types[0]+'_attack.txt'))
+        infilename = self.get_file(os.path.join(self.foldsdir, types[0]+'_attack.txt'))
 
     lines = open(infilename, 'r').readlines()
     files_val = {} # the keys in the both dictionaries are just pro-forma, for compatibility with other databases
@@ -360,7 +364,7 @@ class Database(object):
 
     return files_val, files_train
 
-  def cross_valid_foldobjects(self, cls, types=None, qualities=None, infilename=None, fold_no=0):
+  def cross_valid_foldobjects(self, cls, types=None, qualities=None, fold_no=0):
     """ Returns two dictionaries: one with the names of the files of the validation subset in one fold, and one with the names of the files in the training subset of that fold. The number of the cross_validation fold is given as a parameter.
 
     Keyword parameters:
@@ -376,9 +380,6 @@ class Database(object):
       tuple). Defines the qualities of the videos in the database that are going to be used. If you set this
       parameter to the value None, the videos of all qualities are returned ("low", "normal", "high").
 
-    infilename
-      The name of the file where the cross-validation files are stored. If it is None, then the name of the filename with the cross-validation files is formed using the parameters version and cls. If this parameter is specified, then the parameters version and cls are ignored
-
     fold_no
       Number of the fold
   """
@@ -388,17 +389,16 @@ class Database(object):
     VALID_QUALITIES = self.qualities
     qualities = self.check_validity(qualities, "quality", VALID_QUALITIES, VALID_QUALITIES)
 
-    if infilename == None:
-      if cls == 'real':
-        infilename = self.get_file(os.path.join('folds', 'real.txt'))
+    if cls == 'real':
+      infilename = self.get_file(os.path.join(self.foldsdir, 'real.txt'))
+    else:
+      types = self.check_validity(types, "type", VALID_TYPES, VALID_TYPES)
+      if 'warped' in types and 'cut' in types and 'video' in types:
+        infilename = self.get_file(os.path.join(self.foldsdir, 'cut_warped_video_attack.txt'))
+      elif 'warped' in types and 'cut' in types:
+        infilename = self.get_file(os.path.join(self.foldsdir, 'cut_warped_attack.txt'))
       else:
-        types = self.check_validity(types, "type", VALID_TYPES, VALID_TYPES)
-        if 'warped' in types and 'cut' in types and 'video' in types:
-          infilename = self.get_file(os.path.join('folds', 'cut_warped_video_attack.txt'))
-        elif 'warped' in types and 'cut' in types:
-          infilename = self.get_file(os.path.join('folds', 'cut_warped_attack.txt'))
-        else:
-          infilename = self.get_file(os.path.join('folds', types[0]+'_attack.txt'))
+        infilename = self.get_file(os.path.join(self.foldsdir, types[0]+'_attack.txt'))
 
     lines = open(infilename, 'r').readlines()
     obj_val = []
