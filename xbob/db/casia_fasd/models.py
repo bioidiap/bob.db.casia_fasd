@@ -48,10 +48,10 @@ class File(object):
     return bool(self.cls == 'real')
 
   def get_clientid(self):
-    """The ID of the client. Value from 1 to 50. Clients in the train set have IDs from 1 to 20; clients in the test set have IDs from 21 to 50."""
+    """The ID of the client. Value from 1 to 50. Clients in the train and devel set may have IDs from 1 to 20; clients in the test set have IDs from 21 to 50."""
 
     stem_client = self.filename.split('/')[1] # the identity stem of the filename
-    if self.group == 'train':
+    if self.group == 'train' or self.group == 'dev':
       return int(stem_client)
     else: #'test'
       return int(stem_client) + 20
