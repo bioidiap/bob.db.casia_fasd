@@ -14,8 +14,8 @@ setup(
     description='CASIA Face Anti-Spoofing Database Access API for Bob',
     url='http://pypi.python.org/pypi/xbob.db.casia_fasd',
     license='GPLv3',
-    author='Andre Anjos',
-    author_email='andre.anjos@idiap.ch',
+    author='Andre Anjos, Ivana Chingovska',
+    author_email='andre.anjos@idiap.ch, ivana.chingovska@idiap.ch',
     long_description=open('README.rst').read(),
 
     # This line is required for any distutils based packaging.
