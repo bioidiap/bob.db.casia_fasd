@@ -108,7 +108,7 @@ class Database(DatabaseBase):
 
     p.add_argument('--fold-number', choices=(1,2,3,4,5), type=int, default=1, dest='casia_fold_number', help='Number of the fold (defaults to %(default)s)')
     
-    p.add_argument('--foldsdir', type=str, dest='foldsdir', help='The directory where the cross-validation protocol files are stored. If not specified, the default cross-validation files are used')
+    p.add_argument('--foldsdir', type=str, dest='foldsdir', help='The directory where the cross-validation protocol files are stored. An absolute path needs to be provided. If not specified, the default cross-validation files are used')
 
     p.set_defaults(name=entry_point_name)
     p.set_defaults(cls=Database)

@@ -36,8 +36,9 @@ class Database(object):
     self.qualities = ('low','normal','high')
     self.types = ('warped', 'cut', 'video')
     self.ids = list(range(1, 51))
+    package_directory = os.path.dirname(os.path.abspath(__file__))
     if foldsdir == None:
-      self.foldsdir = 'folds'
+      self.foldsdir = os.path.join(package_directory, 'newfolds')
     else:
       self.foldsdir = foldsdir  
 
