@@ -22,7 +22,7 @@ References:
 import os
 import six
 import numpy
-from bob.db import utils
+from bob.db.base import utils
 from .models import *
 
 class Database(object):
@@ -449,11 +449,30 @@ class Database(object):
     import warnings
     warnings.warn("The method Database.save() is deprecated, use the File object directly as returned by Database.objects() for more powerful object manipulation.", DeprecationWarning)
 
-    from bob.io import save
+    from bob.io.base import save
 
     fullpath = os.path.join(directory, filename + extension)
     fulldir = os.path.dirname(fullpath)
     utils.makedirs_safe(fulldir)
     save(obj, fullpath)
 
-__all__ = dir()
+def get_config():
+  """Returns a string containing the configuration information.
+  """
+
+  import pkg_resources
+
+  packages = pkg_resources.require(__name__)
+  this = packages[0]
+  deps = packages[1:]
+
+  retval =  "%s: %s (%s)\n" % (this.key, this.version, this.location)
+  retval += "  - python dependencies:\n"
+  for d in deps: retval += "    - %s: %s (%s)\n" % (d.key, d.version, d.location)
+
+  return retval.strip()
+
+# gets sphinx autodoc done right - don't remove it
+__all__ = [_ for _ in dir() if not _.startswith('_')]
+
+#__all__ = dir()

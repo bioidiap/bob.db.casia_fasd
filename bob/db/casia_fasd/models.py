@@ -3,7 +3,8 @@
 #Fri Sep 21 11:16:16 CEST 2012
 
 import os
-import bob
+import bob.io.base
+import bob.db.base
 
 class File(object):
   """ Generic file container """
@@ -155,7 +156,7 @@ class File(object):
       [optional] The extension of the filename - this will control the type of
       output and the codec for saving the input blob.
     """
-    return bob.io.load(self.make_path(directory, extension))
+    return bob.io.base.load(self.make_path(directory, extension))
 
 
   def save(self, data, directory=None, extension='.hdf5'):
@@ -177,8 +178,8 @@ class File(object):
     """
 
     path = self.make_path(directory, extension)
-    bob.db.utils.makedirs_safe(os.path.dirname(path))
-    bob.io.save(data, path)
+    bob.db.base.utils.makedirs_safe(os.path.dirname(path))
+    bob.io.base.save(data, path)
 
 
 

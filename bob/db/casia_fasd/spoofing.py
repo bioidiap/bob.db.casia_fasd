@@ -14,7 +14,7 @@ from antispoofing.utils.db import File as FileBase, Database as DatabaseBase
 class File(FileBase):
 
   def __init__(self, f):
-    """Initializes this File object with the xbob.db.casia_fasd.File equivalent"""
+    """Initializes this File object with the bob.db.casia_fasd.File equivalent"""
     self.__f = f
 
   def videofile(self, directory=None):

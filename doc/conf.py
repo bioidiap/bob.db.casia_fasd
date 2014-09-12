@@ -40,7 +40,6 @@ extensions = [
   'sphinx.ext.autosummary',
   'sphinx.ext.doctest',
   'sphinx.ext.intersphinx',
-  'bob.sphinxext.plot', # ours add source copying to install directory
   ]
 
 # The viewcode extension appeared only on Sphinx >= 1.0.0
@@ -68,7 +67,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'CASIA Face Anti-Spoofing Database (Bob API)'
+project = u'CASIA Face Anti-Spoofing Database (Bob API) Documentation'
 import time
 copyright = u'%s, Idiap Research Institute' % time.strftime('%Y')
 
@@ -77,7 +76,7 @@ copyright = u'%s, Idiap Research Institute' % time.strftime('%Y')
 # built documents.
 #
 # The short X.Y version.
-from xbob.db.casia_fasd.driver import Interface
+from bob.db.casia_fasd.driver import Interface
 version = Interface().version()
 # The full version, including alpha/beta/rc tags.
 release = version
@@ -151,7 +150,7 @@ html_favicon = ''
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+#html_static_path = ['_static']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.

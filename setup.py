@@ -9,8 +9,8 @@ from setuptools import setup, find_packages
 # parameters that define our package.
 setup(
 
-    name='xbob.db.casia_fasd',
-    version='1.1.0',
+    name='bob.db.casia_fasd',
+    version='2.0.0a0',
     description='CASIA Face Anti-Spoofing Database Access API for Bob',
     url='http://pypi.python.org/pypi/xbob.db.casia_fasd',
     license='GPLv3',
@@ -24,14 +24,14 @@ setup(
     zip_safe=False,
 
     namespace_packages = [
-      'xbob',
-      'xbob.db',
+      'bob',
+      'bob.db',
       ],
 
     install_requires=[
       'setuptools',
       'six',
-      'bob >= 1.1.0',
+      'bob.db.base',
       'antispoofing.utils',
     ],
 
@@ -39,22 +39,22 @@ setup(
 
       # declare the database to bob
       'bob.db': [
-        'casia_fasd = xbob.db.casia_fasd.driver:Interface',
+        'casia_fasd = bob.db.casia_fasd.driver:Interface',
         ],
 
       # declare tests to bob
       'bob.test': [
-        'casia_fasd = xbob.db.casia_fasd.test:FASDDatabaseTest',
+        'casia_fasd = bob.db.casia_fasd.test:FASDDatabaseTest',
         ],
 
       # antispoofing database declaration
       'antispoofing.utils.db': [
-        'casia_fasd = xbob.db.casia_fasd.spoofing:Database',
+        'casia_fasd = bob.db.casia_fasd.spoofing:Database',
         ],
       },
 
     classifiers = [
-      'Development Status :: 5 - Production/Stable',
+      'Development Status :: 4 - Beta',
       'Intended Audience :: Science/Research',
       'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
       'Natural Language :: English',
