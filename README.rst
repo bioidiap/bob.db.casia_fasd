@@ -1,3 +1,14 @@
+.. image:: https://travis-ci.org/bioidiap/bob.db.casia_fasd.svg?branch=master
+   :target: https://travis-ci.org/bioidiap/bob.db.casia_fasd
+.. image:: https://coveralls.io/repos/bioidiap/bob.db.casia_fasd/badge.png
+   :target: https://coveralls.io/r/bioidiap/bob.db.casia_fasd
+.. image:: http://img.shields.io/github/tag/bioidiap/bob.db.casia_fasd.png
+   :target: https://github.com/bioidiap/bob.db.casia_fasd
+.. image:: http://img.shields.io/pypi/v/bob.db.casia_fasd.png
+   :target: https://pypi.python.org/pypi/bob.db.casia_fasd
+.. image:: http://img.shields.io/pypi/dm/bob.db.casia_fasd.png
+   :target: https://pypi.python.org/pypi/bob.db.casia_fasd
+
 ===================================
  CASIA Face Anti-Spoofing Database
 ===================================
