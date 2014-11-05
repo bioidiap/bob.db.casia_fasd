@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 # Andre Anjos <andre.dos.anjos@gmail.com>
-# Wed 15 Aug 11:42:52 2012 
+# Wed 15 Aug 11:42:52 2012
 
 """Bob Database Driver entry-point for the CASIA Face-Antispoofing Database.
 """
@@ -33,8 +33,8 @@ def dumplist(args):
   return 0
 
 def checkfiles(args):
-  """Checks the existence of the files based on your criteria""" 
-    
+  """Checks the existence of the files based on your criteria"""
+
   #from .__init__ import Database
   db = Database()
 
@@ -86,16 +86,16 @@ class Interface(BaseInterface):
   def type(self):
     return 'text'
 
-  def add_commands(self, parser):  
+  def add_commands(self, parser):
     """Add specific subcommands that the action "dumplist" can use"""
 
     from . import __doc__ as docs
-    
-    subparsers = self.setup_parser(parser, 
+
+    subparsers = self.setup_parser(parser,
         "CASIA Face Anti-Spoofing Database", docs)
 
     from argparse import SUPPRESS
-    
+
     db = Database()
 
     # add the dumplist command

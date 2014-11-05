@@ -2,11 +2,16 @@
 .. @author: Manuel Guenther <Manuel.Guenther@idiap.ch>
 .. @date:   Tue Aug 26 09:42:18 CEST 2014
 
+.. _bob.db.casia_fasd:
+
 ===================================
  CASIA Face Anti-spoofing Database
 ===================================
 
 .. todolist::
+
+.. todo::
+   upload this documentation to PythonHosted.org
 
 Documentation
 -------------

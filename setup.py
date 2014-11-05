@@ -26,7 +26,7 @@ setup(
     namespace_packages = [
       'bob',
       'bob.db',
-      ],
+    ],
 
     install_requires=[
       'setuptools',
@@ -40,20 +40,16 @@ setup(
       # declare the database to bob
       'bob.db': [
         'casia_fasd = bob.db.casia_fasd.driver:Interface',
-        ],
-
-      # declare tests to bob
-      'bob.test': [
-        'casia_fasd = bob.db.casia_fasd.test:FASDDatabaseTest',
-        ],
+      ],
 
       # antispoofing database declaration
       'antispoofing.utils.db': [
         'casia_fasd = bob.db.casia_fasd.spoofing:Database',
-        ],
-      },
+      ],
+    },
 
     classifiers = [
+      'Framework :: Bob',
       'Development Status :: 4 - Beta',
       'Intended Audience :: Science/Research',
       'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
@@ -62,6 +58,6 @@ setup(
       'Programming Language :: Python :: 3',
       'Topic :: Scientific/Engineering :: Artificial Intelligence',
       'Topic :: Database :: Front-Ends',
-      ],
+    ],
 
 )

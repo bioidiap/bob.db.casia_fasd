@@ -28,7 +28,7 @@ from .models import *
 class Database(object):
 
   def __init__(self, foldsdir=None):
-    
+
     from .driver import Interface
     self.info = Interface()
     self.groups = ('train', 'test')
@@ -40,7 +40,7 @@ class Database(object):
     if foldsdir == None:
       self.foldsdir = os.path.join(package_directory, 'newfolds')
     else:
-      self.foldsdir = foldsdir  
+      self.foldsdir = foldsdir
 
   def set_foldsdir(self, foldsdir):
     """Sets the directory holding the cross validation protocol of the database"""
@@ -475,4 +475,3 @@ def get_config():
 # gets sphinx autodoc done right - don't remove it
 __all__ = [_ for _ in dir() if not _.startswith('_')]
 
-#__all__ = dir()
