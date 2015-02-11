@@ -6,7 +6,7 @@
    :target: http://pythonhosted.org/bob.db.casia_fasd/index.html
 .. image:: http://img.shields.io/badge/docs-latest-orange.png
    :target: https://www.idiap.ch/software/bob/docs/latest/bioidiap/bob.db.casia_fasd/master/index.html
-.. image:: https://travis-ci.org/bioidiap/bob.db.casia_fasd.svg?branch=v2.0.2
+.. image:: https://travis-ci.org/bioidiap/bob.db.casia_fasd.svg?branch=master
    :target: https://travis-ci.org/bioidiap/bob.db.casia_fasd
 .. image:: https://coveralls.io/repos/bioidiap/bob.db.casia_fasd/badge.png
    :target: https://coveralls.io/r/bioidiap/bob.db.casia_fasd
