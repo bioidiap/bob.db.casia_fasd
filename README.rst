@@ -7,9 +7,9 @@
 .. image:: http://img.shields.io/badge/docs-latest-orange.png
    :target: https://www.idiap.ch/software/bob/docs/latest/bioidiap/bob.db.casia_fasd/master/index.html
 .. image:: https://travis-ci.org/bioidiap/bob.db.casia_fasd.svg?branch=master
-   :target: https://travis-ci.org/bioidiap/bob.db.casia_fasd
-.. image:: https://coveralls.io/repos/bioidiap/bob.db.casia_fasd/badge.png
-   :target: https://coveralls.io/r/bioidiap/bob.db.casia_fasd
+   :target: https://travis-ci.org/bioidiap/bob.db.casia_fasd?branch=master
+.. image:: https://coveralls.io/repos/bioidiap/bob.db.casia_fasd/badge.png?branch=master
+   :target: https://coveralls.io/r/bioidiap/bob.db.casia_fasd?branch=master
 .. image:: https://img.shields.io/badge/github-master-0000c0.png
    :target: https://github.com/bioidiap/bob.db.casia_fasd/tree/master
 .. image:: http://img.shields.io/pypi/v/bob.db.casia_fasd.png
@@ -47,4 +47,3 @@ For a list of tutorials on this or the other packages ob Bob_, or information on
 
 .. _bob: https://www.idiap.ch/software/bob
 .. _casia fasd: http://www.cbsr.ia.ac.cn/english/FaceAntiSpoofDatabases.asp
-

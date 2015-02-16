@@ -4,8 +4,8 @@ matrix:
   - python: 2.6
   - python: 2.7
     env:
-    - secure: G+01O0hR4OdUjV0rmzydDlVhrJOcVDBByecGnORLT9LV1qSd3IU04de7AfzkZhnhl58UxmmQsxd+XqPaCJoU/uTWKa0GW0BCJSxmLxx8cXco3Y8yV03zbBRJC8rbX7O+jrlx+6Js+CFpTfm+MlOXeeGAbky5gr1KZQD2pXqr+0w=
-    - secure: XUeglE6tOR0dckxT/2WPQivRY3n3tsWYnFbR1oQk17p+7o5/S5rXYxR7PvL9E8k4pprqFf54IGMVe41F5Q8k/5ZanAVRBKSnvod9or1INmqXgsMDS9yUjO0jTHnrazSn4jNIUhWd/7+1VuxdIPxUSBfVOr+9ow8IrQorQqc7eOc=
+    - secure: XGsoak/JpYKSsVBC1X+k6Ve6bO5hl0fKF2t03VlHI1FkU0i4UGjKAKB57qkYr58+u9xXqyphzq3x5L0aMshzUTSHjdWC+0qDk2asvkTuf+BbSZrtEjw0/Pn5Ig6stxe/LrEmuowQ6DTtqBAEItWhxnI1AMZ5xK8MmQ4yk6fwQ8o=
+    - secure: ReBB4//PaNVLJZAwneo41REoDLuLnmsX5888JW3uFrP3vv0gSlKCSlxknbyvj52WOJrfa+NnSr/K85RSA+LfrbH4S/DRXJxMTStxjGvsUgzbmD9Wm8o1bXHF6ak4YDWws/b6c4QXatqkSHpF57NuzSIcAKIQ+xa7ENbJPWM1aW0=
     - BOB_DOCUMENTATION_SERVER=https://www.idiap.ch/software/bob/docs/latest/bioidiap/%s/master
   - python: 3.2
     env:
