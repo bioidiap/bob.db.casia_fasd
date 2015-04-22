@@ -169,49 +169,75 @@ class Database(DatabaseBase):
     
     return list(set([obj.get_client_id() for obj in objects]))
    
-  def get_enroll_data(self, group=None):
-    """Returns either all enrollment objects or enrollment objects for a specific group"""
-    raise RuntimeError("This dataset does not have enrollment data")
-   
-  def get_train_data(self, fold_no=0):
+  def get_enroll_data(self, group=None, fold_no=0, enroll_quality='high'):
+    __doc__ = DatabaseBase.get_enroll_data.__doc__
+    """Returns enrollment objects for a specific group"""
+    # enroll_quality is a parameter stating which kind of videos will be used for enrollment
 
+    if group == 'train':    
+      _, retval   = self.__db.cross_valid_foldobjects(cls='real', fold_no=fold_no, qualities=enroll_quality)
+    elif group == 'devel':   
+      retval, _   = self.__db.cross_valid_foldobjects(cls='real', fold_no=fold_no, qualities=enroll_quality) 
+    elif group == 'test':
+      retval = self.__db.objects(groups='test', cls='real', qualities=enroll_quality)
+    
+    return retval #raise RuntimeError("This dataset does not have enrollment data")
+  get_enroll_data.__doc__ = DatabaseBase.get_enroll_data.__doc__
+
+
+  def get_train_data(self, fold_no=0, enroll_quality=None):
+    __doc__ = DatabaseBase.get_train_data.__doc__
+    # enroll_quality is a parameter stating which kind of videos will be used for enrollment. If not None, then this enrollment quality will be exempted from the rest of the qualities used in this method. If None, then the method assumes that no enrollment samples are used and all the qualities are valid as non-enrollment ones. 
     if fold_no == 0:
       types, qualities, fold_no = self.__parse_arguments()
     else:
       types, qualities, _ = self.__parse_arguments()  
 
-    _, trainReal   = self.__db.cross_valid_foldobjects(cls='real', fold_no=fold_no, qualities=qualities)
-    _, trainAttack = self.__db.cross_valid_foldobjects(cls='attack', types=types, fold_no=fold_no, qualities=qualities)
+    _, trainAttack = self.__db.cross_valid_foldobjects(cls='attack', types=types, fold_no=fold_no, qualities=qualities) # enrollment quality does not play a role when probing attacks
+
+    if enroll_quality != None: # this means that the enrollment_quality is exempted from the returned real samples
+      qualities = list(set(qualities) - set(enroll_quality))
+    _, trainReal   = self.__db.cross_valid_foldobjects(cls='real', fold_no=fold_no, qualities=qualities)  
 
     return [File(f) for f in trainReal], [File(f) for f in trainAttack]
   get_train_data.__doc__ = DatabaseBase.get_train_data.__doc__
 
-  def get_devel_data(self, fold_no=0):
+
+  def get_devel_data(self, fold_no=0, enroll_quality=None):
     __doc__ = DatabaseBase.get_devel_data.__doc__
+
+    # enroll_quality is a parameter stating which kind of videos will be used for enrollment. If not None, then this enrollment quality will be exempted from the rest of the qualities used in this method. If None, then the method assumes that no enrollment samples are used and all the qualities are valid as non-enrollment ones. 
 
     if fold_no == 0:
       types, qualities, fold_no = self.__parse_arguments()
     else:
       types, qualities, _ = self.__parse_arguments()  
 
-    develReal, _   = self.__db.cross_valid_foldobjects(cls='real', fold_no=fold_no, qualities=qualities)
+    develAttack, _ = self.__db.cross_valid_foldobjects(cls='attack', types=types, fold_no=fold_no, qualities=qualities) # enrollment quality does not play a role when probing attacks
 
-    develAttack, _ = self.__db.cross_valid_foldobjects(cls='attack', types=types, fold_no=fold_no, qualities=qualities)
+    if enroll_quality != None: # this means that the enrollment_quality is exempted from the returned real samples
+      qualities = list(set(qualities) - set(enroll_quality))
+    develReal, _   = self.__db.cross_valid_foldobjects(cls='real', fold_no=fold_no, qualities=qualities)
 
     return [File(f) for f in develReal], [File(f) for f in develAttack]
   get_devel_data.__doc__ = DatabaseBase.get_devel_data.__doc__
 
-  def get_test_data(self, fold_no=0):
+
+  def get_test_data(self, fold_no=0, enroll_quality=None):
     __doc__ = DatabaseBase.get_test_data.__doc__
 
+    # enroll_quality is a parameter stating which kind of videos will be used for enrollment. If not None, then this enrollment quality will be exempted from the rest of the qualities used in this method. If None, then the method assumes that no enrollment samples are used and all the qualities are valid as non-enrollment ones. 
     if fold_no == 0:
       types, qualities, fold_no = self.__parse_arguments()
     else:
       types, qualities, _ = self.__parse_arguments()  
 
-    testReal = self.__db.objects(groups='test', cls='real', qualities=qualities)
-    testAttack = self.__db.objects(groups='test', cls='attack', types=types, qualities=qualities)
+    testAttack = self.__db.objects(groups='test', cls='attack', types=types, qualities=qualities) # enrollment quality does not play a role when probing attacks
 
+    if enroll_quality != None: # this means that the enrollment_quality is exempted from the returned real samples
+      qualities = list(set(qualities) - set(enroll_quality))
+    testReal = self.__db.objects(groups='test', cls='real', qualities=qualities)
+    
     return [File(f) for f in testReal], [File(f) for f in testAttack]
   get_test_data.__doc__ = DatabaseBase.get_test_data.__doc__
 
