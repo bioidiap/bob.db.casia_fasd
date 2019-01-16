@@ -1,30 +1,30 @@
 #!/usr/bin/env python
-#Ivana Chingovska <ivana.chingovska@idiap.ch>
-#Fri Sep 21 11:16:16 CEST 2012
+# vim: set fileencoding=utf-8 :
 
 import os
 import bob.io.base
 import bob.db.base
 
+
 class File(object):
-  """ Generic file container """
+    """ Generic file container """
 
-  def __init__(self, filename, cls, group):
+    def __init__(self, filename, cls, group):
 
-    self.filename = filename
-    self.cls = cls # 'attack' or 'real'
-    self.group = group # 'train' or 'test'
-    
-  def __repr__(self):
-    return "File('%s')" % self.filename
+        self.filename = filename
+        self.cls = cls  # 'attack' or 'real'
+        self.group = group  # 'train' or 'test'
 
-  def get_file(self, pc):
-    '''Returns the full file path given the path components pc'''
-    from pkg_resources import resource_filename
-    return resource_filename(__name__, os.path.join(pc))
+    def __repr__(self):
+        return "File('%s')" % self.filename
 
-  def make_path(self, directory=None, extension=None):
-    """Wraps this files' filename so that a complete path is formed
+    def get_file(self, pc):
+        '''Returns the full file path given the path components pc'''
+        from pkg_resources import resource_filename
+        return resource_filename(__name__, os.path.join(pc))
+
+    def make_path(self, directory=None, extension=None):
+        """Wraps this files' filename so that a complete path is formed
 
     Keyword parameters:
 
@@ -39,52 +39,55 @@ class File(object):
     Returns a string containing the newly generated file path.
     """
 
-    if not directory: directory = ''
-    if not extension: extension = ''
-    return os.path.join(directory, self.filename + extension)
+        if not directory: directory = ''
+        if not extension: extension = ''
+        return os.path.join(directory, self.filename + extension)
 
-  def is_real(self):
-    """True if the file belongs to a real access, False otherwise """
+    def is_real(self):
+        """True if the file belongs to a real access, False otherwise """
 
-    return bool(self.cls == 'real')
+        return bool(self.cls == 'real')
 
-  def get_clientid(self):
-    """The ID of the client. Value from 1 to 50. Clients in the train and devel set may have IDs from 1 to 20; clients in the test set have IDs from 21 to 50."""
+    def get_clientid(self):
+        """The ID of the client. Value from 1 to 50. Clients in the train and devel set may have IDs from 1 to 20; clients in the test set have IDs from 21 to 50."""
 
-    stem_client = self.filename.split('/')[1] # the identity stem of the filename
-    if self.group == 'train' or self.group == 'dev':
-      return int(stem_client)
-    else: #'test'
-      return int(stem_client) + 20
+        stem_client = self.filename.split('/')[
+            1]  # the identity stem of the filename
+        if self.group == 'train' or self.group == 'dev':
+            return int(stem_client)
+        else:  #'test'
+            return int(stem_client) + 20
 
-  # db_mappings = {'real_normal':'1', 'real_low':'2', 'real_high':'HR_1', 'warped_normal':'3', 'warped_low':'4', 'warped_high':'HR_2', 'cut_normal':'5', 'cut_low':'6', 'cut_high':'HR_3', 'video_normal':'7', 'video_low':'8', 'video_high':'HR_4'}   
+    # db_mappings = {'real_normal':'1', 'real_low':'2', 'real_high':'HR_1', 'warped_normal':'3', 'warped_low':'4', 'warped_high':'HR_2', 'cut_normal':'5', 'cut_low':'6', 'cut_high':'HR_3', 'video_normal':'7', 'video_low':'8', 'video_high':'HR_4'}
 
-  def get_type(self):
-    """The type of attack, if it is an attack. Possible values: 'warped', 'cut' and 'video'. Returns None for real accesses"""
+    def get_type(self):
+        """The type of attack, if it is an attack. Possible values: 'warped', 'cut' and 'video'. Returns None for real accesses"""
 
-    stem_fname = self.filename.rpartition('/')[2] # just the filename (without the full path)
-    if stem_fname in ('3', '4', 'HR_2'):
-      return 'warped'
-    elif stem_fname in ('5', '6', 'HR_3'):
-      return 'cut'
-    elif stem_fname in ('7', '8', 'HR_4'):
-      return 'video'
-    else: # real access, no type attribute
-      return None
+        stem_fname = self.filename.rpartition('/')[
+            2]  # just the filename (without the full path)
+        if stem_fname in ('3', '4', 'HR_2'):
+            return 'warped'
+        elif stem_fname in ('5', '6', 'HR_3'):
+            return 'cut'
+        elif stem_fname in ('7', '8', 'HR_4'):
+            return 'video'
+        else:  # real access, no type attribute
+            return None
 
-  def get_quality(self):
-    """The quality of the video file. Possible value: 'normal', 'low' and 'high'."""    
-      
-    stem_fname = self.filename.rpartition('/')[2] # just the filename (without the full path)
-    if stem_fname in ('1', '3', '5', '7'):
-      return 'normal'
-    elif stem_fname in ('2', '4', '6', '8'):
-      return 'low'
-    else: # stem_name in ('HR1', 'HR2', 'HR3', 'HR4')
-      return 'high'
+    def get_quality(self):
+        """The quality of the video file. Possible value: 'normal', 'low' and 'high'."""
 
-  def facefile(self, directory=None):
-    """Returns the path to the companion face bounding-box file
+        stem_fname = self.filename.rpartition('/')[
+            2]  # just the filename (without the full path)
+        if stem_fname in ('1', '3', '5', '7'):
+            return 'normal'
+        elif stem_fname in ('2', '4', '6', '8'):
+            return 'low'
+        else:  # stem_name in ('HR1', 'HR2', 'HR3', 'HR4')
+            return 'high'
+
+    def facefile(self, directory=None):
+        """Returns the path to the companion face bounding-box file
 
     Keyword parameters:
 
@@ -94,12 +97,12 @@ class File(object):
     Returns a string containing the face file path.
     """
 
-    if not directory: 
-        directory = self.get_file('face-locations')
-    return self.make_path(directory, '.face')
+        if not directory:
+            directory = self.get_file('face-locations')
+        return self.make_path(directory, '.face')
 
-  def videofile(self, directory=None):
-    """Returns the path to the database video file for this object
+    def videofile(self, directory=None):
+        """Returns the path to the database video file for this object
 
     Keyword parameters:
 
@@ -109,11 +112,10 @@ class File(object):
     Returns a string containing the video file path.
     """
 
-    return self.make_path(directory, '.avi')
+        return self.make_path(directory, '.avi')
 
-
-  def bbx(self, directory=None):
-    """Reads the file containing the face locations for the frames in the
+    def bbx(self, directory=None):
+        """Reads the file containing the face locations for the frames in the
     current video
 
     Keyword parameters:
@@ -137,11 +139,10 @@ class File(object):
       Note that **not** all the frames may contain detected faces.
     """
 
-    return numpy.loadtxt(self.facefile(directory), dtype=int)
- 
+        return numpy.loadtxt(self.facefile(directory), dtype=int)
 
-  def load(self, directory=None, extension='.hdf5'):
-    """Loads the data at the specified location and using the given extension.
+    def load(self, directory=None, extension='.hdf5'):
+        """Loads the data at the specified location and using the given extension.
 
     Keyword parameters:
 
@@ -156,11 +157,10 @@ class File(object):
       [optional] The extension of the filename - this will control the type of
       output and the codec for saving the input blob.
     """
-    return bob.io.base.load(self.make_path(directory, extension))
+        return bob.io.base.load(self.make_path(directory, extension))
 
-
-  def save(self, data, directory=None, extension='.hdf5'):
-    """Saves the input data at the specified location and using the given
+    def save(self, data, directory=None, extension='.hdf5'):
+        """Saves the input data at the specified location and using the given
     extension.
 
     Keyword parameters:
@@ -177,9 +177,6 @@ class File(object):
       the codec for saving the input blob.
     """
 
-    path = self.make_path(directory, extension)
-    bob.io.base.create_directories_safe(os.path.dirname(path))
-    bob.io.base.save(data, path)
-
-
-
+        path = self.make_path(directory, extension)
+        bob.io.base.create_directories_safe(os.path.dirname(path))
+        bob.io.base.save(data, path)
