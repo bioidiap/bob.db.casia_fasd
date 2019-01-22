@@ -48,12 +48,6 @@ class FASDDatabaseTest(unittest.TestCase):
         from bob.db.base.script.dbmanage import main
         self.assertEqual(main('casia_fasd checkfiles --self-test'.split()), 0)
 
-    def test04_manage_files(self):
-
-        from bob.db.base.script.dbmanage import main
-
-        self.assertEqual(main('casia_fasd files'.split()), 0)
-
     def test05_query_obj(self):
         db = Database()
 
