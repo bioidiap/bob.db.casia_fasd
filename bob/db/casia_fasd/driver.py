@@ -80,17 +80,20 @@ class Interface(BaseInterface):
         return 'casia_fasd'
 
     def files(self):
-        from pkg_resources import resource_filename
-        raw_files = (
-            'cross_valid.txt',
-            'cut_attack.txt',
-            'cut_warped_attack.txt',
-            'cut_warped_video_attack.txt',
-            'real.txt',
-            'video_attack.txt',
-            'warped_attack.txt',
-        )
-        return [resource_filename(__name__, k) for k in raw_files]
+        return None
+
+    # def files(self):
+    #     from pkg_resources import resource_filename
+    #     raw_files = (
+    #         'cross_valid.txt',
+    #         'cut_attack.txt',
+    #         'cut_warped_attack.txt',
+    #         'cut_warped_video_attack.txt',
+    #         'real.txt',
+    #         'video_attack.txt',
+    #         'warped_attack.txt',
+    #     )
+    #     return [resource_filename(__name__, k) for k in raw_files]
 
     def version(self):
         import pkg_resources  # part of setuptools

@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 
-import os
-import bob.io.base
 import bob.db.base
+import bob.io.base
+import numpy
+import os
 
 
 class File(object):
@@ -49,7 +50,9 @@ class File(object):
         return bool(self.cls == 'real')
 
     def get_clientid(self):
-        """The ID of the client. Value from 1 to 50. Clients in the train and devel set may have IDs from 1 to 20; clients in the test set have IDs from 21 to 50."""
+        """The ID of the client. Value from 1 to 50. Clients in the train and
+        devel set may have IDs from 1 to 20; clients in the test set have IDs
+        from 21 to 50."""
 
         stem_client = self.filename.split('/')[
             1]  # the identity stem of the filename
@@ -58,10 +61,14 @@ class File(object):
         else:  #'test'
             return int(stem_client) + 20
 
-    # db_mappings = {'real_normal':'1', 'real_low':'2', 'real_high':'HR_1', 'warped_normal':'3', 'warped_low':'4', 'warped_high':'HR_2', 'cut_normal':'5', 'cut_low':'6', 'cut_high':'HR_3', 'video_normal':'7', 'video_low':'8', 'video_high':'HR_4'}
+    # db_mappings = {'real_normal':'1', 'real_low':'2', 'real_high':'HR_1',
+    # 'warped_normal':'3', 'warped_low':'4', 'warped_high':'HR_2',
+    # 'cut_normal':'5', 'cut_low':'6', 'cut_high':'HR_3', 'video_normal':'7',
+    # 'video_low':'8', 'video_high':'HR_4'}
 
     def get_type(self):
-        """The type of attack, if it is an attack. Possible values: 'warped', 'cut' and 'video'. Returns None for real accesses"""
+        """The type of attack, if it is an attack. Possible values: 'warped',
+        'cut' and 'video'. Returns None for real accesses"""
 
         stem_fname = self.filename.rpartition('/')[
             2]  # just the filename (without the full path)
