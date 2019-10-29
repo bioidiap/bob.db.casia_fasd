@@ -1,14 +1,14 @@
 .. vim: set fileencoding=utf-8 :
 .. Wed Jan 16 10:07:12 CET 2019
 
-.. image:: https://img.shields.io/badge/docs-v2.0.8-yellow.svg
-   :target: https://www.idiap.ch/software/bob/docs/bob/bob.db.casia_fasd/v2.0.8/index.html
+.. image:: https://img.shields.io/badge/docs-stable-yellow.svg
+   :target: https://www.idiap.ch/software/bob/docs/bob/bob.db.casia_fasd/stable/index.html
 .. image:: https://img.shields.io/badge/docs-latest-orange.svg
    :target: https://www.idiap.ch/software/bob/docs/bob/bob.db.casia_fasd/master/index.html
-.. image:: https://gitlab.idiap.ch/bob/bob.db.casia_fasd/badges/v2.0.8/build.svg
-   :target: https://gitlab.idiap.ch/bob/bob.db.casia_fasd/commits/v2.0.8
-.. image:: https://gitlab.idiap.ch/bob/bob.db.casia_fasd/badges/v2.0.8/coverage.svg
-   :target: https://gitlab.idiap.ch/bob/bob.db.casia_fasd/commits/v2.0.8
+.. image:: https://gitlab.idiap.ch/bob/bob.db.casia_fasd/badges/master/build.svg
+   :target: https://gitlab.idiap.ch/bob/bob.db.casia_fasd/commits/master
+.. image:: https://gitlab.idiap.ch/bob/bob.db.casia_fasd/badges/master/coverage.svg
+   :target: https://gitlab.idiap.ch/bob/bob.db.casia_fasd/commits/master
 .. image:: https://img.shields.io/badge/gitlab-project-0000c0.svg
    :target: https://gitlab.idiap.ch/bob/bob.db.casia_fasd
 .. image:: https://img.shields.io/pypi/v/bob.db.casia_fasd.svg
