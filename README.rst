@@ -1,20 +1,14 @@
 .. vim: set fileencoding=utf-8 :
 .. Wed Jan 16 10:07:12 CET 2019
 
-.. image:: https://img.shields.io/badge/docs-stable-yellow.svg
-   :target: https://www.idiap.ch/software/bob/docs/bob/bob.db.casia_fasd/stable/index.html
-.. image:: https://img.shields.io/badge/docs-latest-orange.svg
+.. image:: https://img.shields.io/badge/docs-available-orage.svg
    :target: https://www.idiap.ch/software/bob/docs/bob/bob.db.casia_fasd/master/index.html
-.. image:: https://gitlab.idiap.ch/bob/bob.db.casia_fasd/badges/master/build.svg
+.. image:: https://gitlab.idiap.ch/bob/bob.db.casia_fasd/badges/master/pipeline.svg
    :target: https://gitlab.idiap.ch/bob/bob.db.casia_fasd/commits/master
 .. image:: https://gitlab.idiap.ch/bob/bob.db.casia_fasd/badges/master/coverage.svg
    :target: https://gitlab.idiap.ch/bob/bob.db.casia_fasd/commits/master
 .. image:: https://img.shields.io/badge/gitlab-project-0000c0.svg
    :target: https://gitlab.idiap.ch/bob/bob.db.casia_fasd
-.. image:: https://img.shields.io/pypi/v/bob.db.casia_fasd.svg
-   :target: https://pypi.python.org/pypi/bob.db.casia_fasd
-.. image:: https://img.shields.io/badge/original-data--files-a000a0.png
-   :target: http://www.cbsr.ia.ac.cn/english/FaceAntiSpoofDatabases.asp
 
 
 =====================================================
